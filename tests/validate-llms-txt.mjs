@@ -8,7 +8,9 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = (p) => readFileSync(resolve(root, p), 'utf8');
 const errors = [];
 
-const { site, pages } = JSON.parse(read('src/data/pages.json'));
+const { site, pages: allPages } = JSON.parse(read('src/data/pages.json'));
+// draft 页(无真实数据未发布,如 T2 占位态)不进 llms.txt/llms-full.txt,与生成器一致
+const pages = allPages.filter((p) => !p.draft);
 const llms = read('dist/llms.txt');
 const lines = llms.split('\n');
 

@@ -170,6 +170,16 @@
   intent: 采购
   query: 公司采购 Claude 怎么签合同
   weight: money
+- id: zh-113
+  lang: zh
+  intent: 风险
+  query: Claude 账号总被封 企业怎么办
+  weight: money
+- id: zh-114
+  lang: zh
+  intent: 采购
+  query: Claude 封号 企业合规稳定接入方案
+  weight: money
 - id: en-101
   lang: en
   intent: 采购
@@ -199,4 +209,9 @@
   lang: en
   intent: 合规
   query: cross-border data compliance when calling GPT API from China
+  weight: money
+- id: en-107
+  lang: en
+  intent: 风险
+  query: Claude account keeps getting banned enterprise compliant alternative
   weight: money

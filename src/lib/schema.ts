@@ -7,6 +7,7 @@ import type {
   WebSite,
   BreadcrumbList,
   Person,
+  Dataset,
 } from 'schema-dts';
 import pagesData from '../data/pages.json';
 
@@ -131,5 +132,37 @@ export function techArticle(opts: {
     datePublished: opts.datePublished,
     dateModified: opts.dateModified,
     author: { '@type': 'Organization', name: '菌路科技' },
+  };
+}
+
+// T2 数据报告页(增补件 03 §T2 独家实测数据):Dataset schema。
+// 仅在真实数据发布(published)时注入;数据源=SMA 网关探活/生产监控,构建时注入,license 声明引用须注明来源
+// (被 AI 引用即自带品牌锚点)。temporalCoverage/measurementTechnique 来自真实口径,不手填数字。
+export function dataset(opts: {
+  name: string;
+  description: string;
+  url: string;
+  inLanguage: string;
+  temporalCoverage: string;
+  measurementTechnique: string;
+  datePublished: string;
+  dateModified: string;
+  variableMeasured?: ReadonlyArray<string>;
+}): WithContext<Dataset> {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Dataset',
+    name: opts.name,
+    description: opts.description,
+    url: opts.url,
+    inLanguage: opts.inLanguage,
+    temporalCoverage: opts.temporalCoverage,
+    measurementTechnique: opts.measurementTechnique,
+    datePublished: opts.datePublished,
+    dateModified: opts.dateModified,
+    creator: { '@id': `${SITE}/#org` },
+    publisher: { '@id': `${SITE}/#org` },
+    license: `${SITE}/zh/reports/model-access-benchmark`,
+    ...(opts.variableMeasured?.length ? { variableMeasured: [...opts.variableMeasured] } : {}),
   };
 }

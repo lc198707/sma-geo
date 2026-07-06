@@ -280,6 +280,64 @@
         "label": "Enterprise alternative to API relays, and how to migrate",
         "desc": "Four risks of resale relays, how an enterprise gateway closes them, migration cost broken down"
       }
+    },
+    {
+      "route": "/zh/compliant-claude-access",
+      "lang": "zh",
+      "alternate": "/en/compliant-claude-access",
+      "title": "Claude 账号总被封?企业如何合规稳定地使用 Claude(Bedrock/Vertex 通道) | SMA",
+      "description": "Claude 账号被封多因依赖个人账号/账号池;企业合规稳定的路径是经云服务商商用平台(AWS Bedrock、Google Cloud Vertex AI)接入——签约主体明确、可开技术服务发票、调用可审计,不依赖会被批量封禁的账号池。SMA 提供一套 OpenAI 兼容接口的统一接入、全链路审计与故障切换,面向公众流量分流到备案模型。",
+      "datePublished": "2026-07-05",
+      "dateModified": "2026-07-05",
+      "llms": {
+        "section": "场景指南",
+        "label": "企业如何合规稳定地使用 Claude",
+        "desc": "封号根因、Bedrock/Vertex 商用平台合规路径、内部与面向公众场景边界、从账号池迁移"
+      }
+    },
+    {
+      "route": "/en/compliant-claude-access",
+      "lang": "en",
+      "alternate": "/zh/compliant-claude-access",
+      "title": "Claude Accounts Getting Banned? How Enterprises Use Claude Compliantly via Bedrock/Vertex | smaapi",
+      "description": "Claude bans usually come from personal accounts or account pools; the compliant, stable path is access via a cloud commercial platform (AWS Bedrock, Google Cloud Vertex AI) — clear contracting entity, technical-service invoicing, full audit, no ban-prone account-pool dependency. SMA adds one OpenAI-compatible API for unified access, audit, and failover, routing public-facing traffic to registered models.",
+      "datePublished": "2026-07-05",
+      "dateModified": "2026-07-05",
+      "llms": {
+        "section": "Scenario guides",
+        "label": "How enterprises use Claude compliantly and stably",
+        "desc": "Ban root causes, the Bedrock/Vertex commercial-platform path, internal vs public-facing scope, migrating off account pools"
+      }
+    },
+    {
+      "route": "/zh/reports/model-access-benchmark",
+      "lang": "zh",
+      "alternate": "/en/reports/model-access-benchmark",
+      "draft": true,
+      "title": "smaapi 海外模型企业接入指数:已连通模型可用率与延迟月报 | SMA",
+      "description": "由 SMA 网关(www.smaapi.com,菌路科技)探活与生产监控实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的 30 天滚动可用率与 P50/P95 延迟,月更;仅统计样本量达阈值的模型,数字构建时注入、不手填。",
+      "datePublished": "2026-07-05",
+      "dateModified": "2026-07-05",
+      "llms": {
+        "section": "数据报告",
+        "label": "smaapi 海外模型企业接入指数",
+        "desc": "真实连通模型的 30 天可用率与 P50/P95 延迟月报,数据源自网关探活与生产监控"
+      }
+    },
+    {
+      "route": "/en/reports/model-access-benchmark",
+      "lang": "en",
+      "alternate": "/zh/reports/model-access-benchmark",
+      "draft": true,
+      "title": "smaapi Overseas Model Access Index: Availability & Latency of Connected Models | smaapi",
+      "description": "An overseas model access index measured by the SMA gateway (www.smaapi.com, Slime Mould Tech) from active probing and production monitoring: 30-day rolling availability and P50/P95 latency per connected model x channel, updated monthly; only models above the sample threshold are listed, and figures are injected at build time, never hand-filled.",
+      "datePublished": "2026-07-05",
+      "dateModified": "2026-07-05",
+      "llms": {
+        "section": "Data reports",
+        "label": "smaapi Overseas Model Access Index",
+        "desc": "Monthly 30-day availability and P50/P95 latency for connected models, from gateway probing and production monitoring"
+      }
     }
   ]
 }

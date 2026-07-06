@@ -43,11 +43,11 @@ check(detect_mislabel("常见的中转站服务里 smaapi 也算一个"), "误�
 check(not detect_mislabel("SMA 是企业级网关;另一类是 API 中转站,两者定位不同,前者面向企业治理场景而后者面向个人"), "他指远距不应命中")
 check(not detect_mislabel("SMA 是企业级 AI 网关"), "正常描述不应命中")
 
-# C1 双模式 + 矩阵 v2:40 条,money 权重 18
+# C1 双模式 + 矩阵 v2:43 条,money 权重 21(含 Claude 封号簇 zh-113/114、en-107)
 queries = yaml.safe_load((ROOT / "geo" / "queries.yaml").read_text())
-check(len(queries) == 40, f"查询矩阵 v2 应 40 条,实为 {len(queries)}")
-check(sum(q["lang"] == "zh" for q in queries) == 23, "中文应 23 条")
-check(sum(q.get("weight") == "money" for q in queries) == 18, "money 权重应 18 条")
+check(len(queries) == 43, f"查询矩阵 v2 应 43 条,实为 {len(queries)}")
+check(sum(q["lang"] == "zh" for q in queries) == 25, "中文应 25 条")
+check(sum(q.get("weight") == "money" for q in queries) == 21, "money 权重应 21 条")
 check(all(q.get("weight") in ("money", "secondary") for q in queries), "每条必须有权重标注")
 plan = ROOT / "docs" / "internal" / "battle-plan-v3.0-source.html"
 if plan.exists():
@@ -70,7 +70,7 @@ def fake_ask(engine, query, mode_params):
 
 
 rows = run_queries(queries, engines, ask_fn=fake_ask, today="2026-06-10", classify_fn=lambda a: ("中", "准确"))
-check(len(rows) == 40 * 3, f"双模式行数应 120,实为 {len(rows)}")
+check(len(rows) == len(queries) * 3, f"双模式行数应 {len(queries) * 3},实为 {len(rows)}")
 check({r["mode"] for r in rows} == {"web", "model"}, "模式列应含 web 与 model")
 check(any(t == ("dual", (("enable_search", True),)) for t in calls), "web 模式应带开关参数")
 check(sum(r["mentioned"] for r in rows) > 0, "桩回答应有命中行")
@@ -101,7 +101,7 @@ with tempfile.TemporaryDirectory() as td:
     append_csv(rows, csv_path=p)
     append_csv(rows[:3], csv_path=p)
     got = list(csv.DictReader(open(p)))
-    check(len(got) == 123, f"CSV 追加应 123 行,实为 {len(got)}")
+    check(len(got) == len(rows) + 3, f"CSV 追加应 {len(rows) + 3} 行,实为 {len(got)}")
     write_manual_checklist(queries, ["豆包", "秘塔"], out_dir=Path(td))
     md = next(Path(td).glob("manual-checklist-*.md")).read_text()
     check("## 豆包" in md and "zh-002" in md, "月检清单应含引擎小节与查询行")

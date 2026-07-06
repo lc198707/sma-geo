@@ -1,0 +1,13 @@
+{
+  "published": false,
+  "reason": "无导出文件:网关 /internal/metrics/geo-export 端点未就绪",
+  "as_of": null,
+  "window_days": null,
+  "p95_definition": "P95 = 30 天滚动窗口内单模型×通道的第 95 百分位端到端延迟(含网络往返,不含客户端排队)。",
+  "measurement": "SMA 网关探活与生产监控;构建管道注入,数字不手填。",
+  "thresholdSampleCount": 100,
+  "droppedBelowThreshold": 0,
+  "droppedInvalid": 0,
+  "latencyAvailable": false,
+  "rows": []
+}

@@ -1,0 +1,13 @@
+{
+  "_note": "T2 数据报告页的网关导出接口契约(示例)。真实数据由网关侧产出并落盘为同目录 geo-export.json(git 忽略)。v1 探活可用率版由 geo/export_gateway_metrics.py 读网关 probe-results.json 生成(status=live,延迟留白);v2 全量版待网关补 per-request latency_ms + channel_type 后加 p50_ms/p95_ms。本示例 status=sample,构建时按占位处理、绝不发布。数字为占位示例,非真实测量。",
+  "status": "sample",
+  "as_of": "2026-07-01",
+  "window_days": null,
+  "measurement": "SMA 网关主动探活(生产);可用率 = 探针成功率,独立于用户侧错误。",
+  "p95_definition": "v1 探活可用率版:不含延迟分位数;P50/P95 待网关补 per-request 延迟记录后由 v2 发布。",
+  "sample_threshold": 30,
+  "rows": [
+    { "model_alias": "<model-a>", "channel_type": "<云商用平台>", "availability_pct": 0, "sample_count": 0, "as_of": "2026-07-01" },
+    { "model_alias": "<model-b>", "channel_type": "<云商用平台>", "availability_pct": 0, "sample_count": 0, "p50_ms": 0, "p95_ms": 0, "as_of": "2026-07-01" }
+  ]
+}

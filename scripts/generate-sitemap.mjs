@@ -4,7 +4,9 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
-const { site, pages } = JSON.parse(readFileSync(resolve(root, 'src/data/pages.json'), 'utf8'));
+const { site, pages: allPages } = JSON.parse(readFileSync(resolve(root, 'src/data/pages.json'), 'utf8'));
+// 门控:draft 页(无真实数据未发布,如 T2 占位态)不进 sitemap
+const pages = allPages.filter((p) => !p.draft);
 
 // E3(r12):每 URL 双语 hreflang 互指注记
 const urls = pages

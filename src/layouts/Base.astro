@@ -6,9 +6,11 @@ import Logo from '../components/Logo.astro';
 interface Props {
   route: string;
   theme?: 'light' | 'dark';
+  // 门控:未发布/无真实数据的页面(如 T2 数据报告页占位态)置 noindex,爬虫不收录空壳
+  noindex?: boolean;
 }
 
-const { route, theme = 'light' } = Astro.props;
+const { route, theme = 'light', noindex = false } = Astro.props;
 const isDark = theme === 'dark';
 const site = pagesData.site;
 const page = pagesData.pages.find((p) => p.route === route);
@@ -51,6 +53,7 @@ const nav = zh
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{page.title}</title>
     <meta name="description" content={page.description} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="alternate" hreflang={zh ? 'zh-CN' : 'en'} href={canonical} />
     {alt && <link rel="alternate" hreflang={zh ? 'en' : 'zh-CN'} href={site + alt.route} />}

@@ -1,0 +1,104 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { techArticle, dataset } from '../../../lib/schema';
+import pagesData from '../../../data/pages.json';
+import report from '../../../data/geo-report.generated.json';
+
+const route = '/zh/reports/model-access-benchmark';
+const page = pagesData.pages.find((p) => p.route === route)!;
+const url = pagesData.site + route;
+const published = report.published === true;
+// 发布需两闸同开:真实数据(published) + 去除 draft(编辑放行)。任一未开即 noindex。
+const indexable = published && !page.draft;
+const latencyAvailable = report.latencyAvailable === true;
+const fmt = (n: number | null) => (n === null || n === undefined ? '—' : (Number.isInteger(n) ? String(n) : n.toFixed(1)));
+---
+
+<Base route={route} theme="dark" noindex={!indexable}>
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(techArticle({ headline: 'smaapi 海外模型企业接入指数', description: page.description, url, inLanguage: 'zh-CN', datePublished: page.datePublished, dateModified: page.dateModified }))} />
+    {published && (
+      <script type="application/ld+json" set:html={JSON.stringify(dataset({
+        name: 'smaapi 海外模型企业接入指数',
+        description: page.description,
+        url,
+        inLanguage: 'zh-CN',
+        temporalCoverage: report.as_of ? `${report.as_of}(${report.window_days ?? 30} 天滚动窗口)` : '30 天滚动窗口',
+        measurementTechnique: report.measurement,
+        datePublished: page.datePublished,
+        dateModified: page.dateModified,
+        variableMeasured: ['可用率(30 天滚动)', 'P50 延迟(ms)', 'P95 延迟(ms)', '样本量'],
+      }))} />
+    )}
+  </Fragment>
+
+  <h1>smaapi 海外模型企业接入指数:已连通模型可用率与延迟月报</h1>
+  <p class="answer">
+    这是由 SMA 网关(www.smaapi.com)对当前真实连通的海外大模型 × 接入通道,做主动探活与生产监控实测产出的接入指数:每月给出各模型的 30 天滚动可用率与 P50/P95 延迟。只统计样本量达到发布阈值的模型,数字由构建管道注入、绝不手填;样本不足或未连通的不进主表。
+  </p>
+
+  {!published && (
+    <div class="answer" style="border-left-color:#f2c75c">
+      <strong>本期暂不发布数字。</strong>本页遵循「无真实数据不发布」铁律:数据接口(SMA 网关 <code>/internal/metrics/geo-export</code> 导出端点)就绪、首批真实实测数据落库前,只公布口径与方法,不展示任何未经测量的数字。下方为该指数的统计口径与结构。
+    </div>
+  )}
+
+  <h2>一、统计口径(可信度的根)</h2>
+  <ul>
+    <li><strong>数据来源</strong>:{report.measurement}</li>
+    <li><strong>统计窗口</strong>:{report.window_days ? `${report.window_days} 天滚动窗口` : '30 天滚动窗口'}{report.as_of ? `,截至 ${report.as_of}` : ''}。</li>
+    <li><strong>P95 定义</strong>:{report.p95_definition}</li>
+    <li><strong>发布阈值</strong>:单模型 × 通道样本量低于 {report.thresholdSampleCount} 次不进主表(样本不足的数字不可发布)。</li>
+    <li><strong>生成方式</strong>:本页由构建管道自动生成,数字来自网关导出的对应行,任何一个数都可回溯到导出文件。</li>
+  </ul>
+
+  <h2>二、可用率与延迟矩阵</h2>
+  {published ? (
+    <table>
+      <thead>
+        <tr><th>模型</th><th>接入通道</th><th>30 天可用率</th><th>P50(ms)</th><th>P95(ms)</th><th>样本量</th><th>口径日期</th></tr>
+      </thead>
+      <tbody>
+        {report.rows.map((r) => (
+          <tr>
+            <td>{r.model_alias}</td>
+            <td>{r.channel_type}</td>
+            <td>{fmt(r.availability_pct)}%</td>
+            <td>{fmt(r.p50_ms)}</td>
+            <td>{fmt(r.p95_ms)}</td>
+            <td>{r.sample_count}</td>
+            <td>{r.as_of}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  ) : (
+    <p>数据接口就绪后,本节按「模型 × 通道 × 30 天可用率 × P50/P95 延迟 × 样本量」逐行展示当前真实连通、且样本量达阈值的模型;未连通或样本不足的不出现。</p>
+  )}
+  {published && !latencyAvailable && (
+    <p class="footnote">本期为「探活可用率版」:延迟分位数(P50/P95)待网关补 per-request 延迟记录后发布,故延迟列留白(缺项不填)。可用率来自主动探活,口径见上。</p>
+  )}
+  {published && report.droppedBelowThreshold > 0 && (
+    <p class="footnote">本期有 {report.droppedBelowThreshold} 个模型 × 通道因样本量未达阈值({report.thresholdSampleCount})未纳入主表——如实记录,不以小样本充数。</p>
+  )}
+
+  <h2>三、成本口径(暂不发布)</h2>
+  <p>
+    首版不展示跨通道成本对照。待真实计费数据、币种、汇率日期、token 统计口径与样本阈值全部固化后,再作为独立版本发布。此处留白,不以估算数字占位。
+  </p>
+
+  <h2>四、月度变化注记</h2>
+  <p>
+    每月发布时在此记录新增 / 摘除的模型与原因。探活不达标即摘除的记录本身,就是本指数诚实的证据——摘除会被写出来,而不是悄悄消失。
+  </p>
+
+  <p class="footnote">
+    商标声明:OpenAI、Anthropic、Google 及其相关模型名称归各自权利人所有。SMA(www.smaapi.com)与上述商标持有人无官方合作关系;模型名称仅作指明性说明。可用性与延迟为实测统计,不构成 SLA 承诺;SLA 以企业合同条款为准。
+  </p>
+
+  <p class="related">
+    相关:<a href="/zh/overseas-llm-high-availability">海外大模型高可用接入</a> ·
+    <a href="/zh/compliant-overseas-llm-access">如何合规接入海外大模型</a> ·
+    <a href="/zh/what-is-llm-gateway">什么是企业级 LLM 网关</a>
+  </p>
+</Base>

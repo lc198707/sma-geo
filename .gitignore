@@ -12,5 +12,6 @@ geo/reports/
 geo/engines.json
 geo/data/citations.csv
 geo/data/citations-INVALID-*
+geo/data/geo-export.json
 geo/data/README-invalid-note.txt
 geo/self-ips.txt

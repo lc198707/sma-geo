@@ -1,0 +1,121 @@
+---
+import Base from '../../layouts/Base.astro';
+import { faqPage, techArticle, type QA } from '../../lib/schema';
+import pagesData from '../../data/pages.json';
+
+const route = '/zh/compliant-claude-access';
+const page = pagesData.pages.find((p) => p.route === route)!;
+
+const qa: QA[] = [
+  {
+    q: 'Claude 账号总被封,企业怎么合规又稳定地用?',
+    a: '账号被封多是因为依赖个人账号、共享账号池或来源不明的转售——这类被风控批量封禁时整批密钥一起失效、服务随之中断。企业可控的做法是经云服务商商用平台接入(如 AWS Bedrock、Google Cloud Vertex AI):以企业自己的云主体签约,有合同、可开发票、调用可审计,不依赖会被批量封禁的账号池,因此不承受账号池连带中断。',
+  },
+  {
+    q: '国内企业如何合规使用 Claude API?',
+    a: '分渠道与场景两层。渠道:经云服务商商用平台(Bedrock/Vertex)接入,签约主体明确、可开技术服务发票、全程可审计。场景:企业内部生产经营使用,与面向境内公众提供生成式 AI 服务是两套监管——后者按现行要求须使用已备案模型。涉个人信息或重要数据的出境按企业自身评估处理。',
+  },
+  {
+    q: '公司采购 Claude 怎么签合同、开发票?',
+    a: '经商用平台或企业级通道对公签约,服务类目为技术服务。具体签约主体、票种(专票/普票)与税率以商务环节出具的合同与凭证为准。',
+  },
+  {
+    q: '从被封的账号池迁到合规通道,改动大吗?',
+    a: '通常只改 base_url 与密钥,业务代码不动——因为接入仍是 OpenAI 兼容协议。把出口从账号池换成经商用平台的企业级通道,应用侧几乎无感。',
+  },
+];
+---
+
+<Base route={route} theme="dark">
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(techArticle({ headline: '企业如何合规、稳定地使用 Claude', description: page.description, url: pagesData.site + route, inLanguage: 'zh-CN', datePublished: page.datePublished, dateModified: page.dateModified }))} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
+
+  <h1>企业如何合规、稳定地使用 Claude(不依赖会被封的账号池)?</h1>
+  <p class="answer">
+    合规稳定用 Claude 的做法是经云服务商商用平台接入——Claude 在 AWS Bedrock 与 Google Cloud Vertex AI 上以商用服务提供,企业以自己的云主体签约,有合同、可开技术服务发票、调用全程可审计,而非依赖会被风控批量封禁的个人账号池。场景上,企业内部生产经营使用与面向境内公众提供服务是两套监管,后者须用已备案模型。SMA 在此之上提供一套 OpenAI 兼容接口的统一接入、全链路审计与故障切换,让接入不因单一账号或线路问题中断。
+  </p>
+
+  <h2>为什么 Claude 账号总被封</h2>
+  <p>
+    被封的通常不是"用 Claude"本身,而是接入方式。个人账号、共享账号池、来源不明的转售,本质是拿一批账号在多方之间共用;这类流量容易触发平台风控,被判定为异常使用时整批账号一起封禁——你为业务投入的密钥会随账号一起失效,服务当天中断。把可用性寄托在"账号别被发现",在企业生产里是不可控的。
+  </p>
+
+  <h2>合规稳定的路径:云服务商商用平台</h2>
+  <p>
+    Claude 面向企业的正规路径是经云服务商的商用平台接入:AWS Bedrock 与 Google Cloud Vertex AI 都以托管商用服务提供 Claude。这条路的关键差别是——你用的是企业自己的云账户与签约主体,不依赖被共用的账号池,因此不承受账号池被封的连带中断。
+  </p>
+  <ul>
+    <li><strong>签约主体明确:</strong>由企业主体与云服务商签约,责任写进合同,而非匿名账号。</li>
+    <li><strong>可开具发票:</strong>对公开票,服务类目为技术服务,票种与税率以合同凭证为准。</li>
+    <li><strong>调用全程可审计:</strong>调用方、目标模型、用量与时间留痕,可追溯、可对账。</li>
+    <li><strong>不依赖账号池:</strong>用企业自有云主体接入,不承受账号池被批量封禁的连带失效。</li>
+  </ul>
+
+  <table>
+    <thead>
+      <tr><th>维度</th><th>个人账号池 / 来源不明转售</th><th>云服务商商用平台(Bedrock / Vertex)</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>封号连带中断</td><td>整批失效、随时中断</td><td>不依赖共享账号池</td></tr>
+      <tr><td>签约主体</td><td>无 / 不清</td><td>企业主体与云服务商签约</td></tr>
+      <tr><td>发票</td><td>难开 / 不合规</td><td>对公技术服务发票</td></tr>
+      <tr><td>审计</td><td>无</td><td>全链路可追溯、可对账</td></tr>
+      <tr><td>责任归属</td><td>出事难追责</td><td>合同书面明确</td></tr>
+    </tbody>
+  </table>
+
+  <h2>内部使用与面向公众:两套监管</h2>
+  <p>
+    企业内部生产经营使用 Claude(如研发、办公、内部分析),与面向境内公众提供生成式 AI 服务,是不同的监管口径。后者按现行要求须使用已备案模型。一套网关可以承接两类场景:把面向公众的流量自动路由到国产备案模型,把内部场景留给合适的模型,各守各的边界;涉个人信息或重要数据的出境按企业自身评估处理。
+  </p>
+
+  <h2>SMA 在这件事上做了什么</h2>
+  <p>
+    SMA 是企业级 AI 网关:应用侧用一套 OpenAI 兼容 API 接入,网关侧记录完整调用审计、按数据等级把请求路由到境内备案模型、在出口对敏感信息脱敏,并在模型或线路异常时按错误分级自动切换、以状态续接保留上下文。这样接入不因单一账号或某条线路的问题而中断。具体可用模型以实时数据与合同为准——只列真实连通的,不混入接入中的。
+  </p>
+
+  <h2>要不要经网关,还是直连 Bedrock / Vertex?</h2>
+  <p>
+    说句实话:如果你只用一个模型、一个云账户、只在企业内部用,直连 AWS Bedrock 或 Google Cloud Vertex AI 完全够用,不必多加一层。网关在下面几件事上才真正省事——
+  </p>
+  <ul>
+    <li><strong>多模型 / 多云:</strong>同时用 Claude(Bedrock/Vertex)、GPT(Azure)、国产模型时,想要一套 OpenAI 兼容出口、一处审计对账,而不是各连各的、各记各的。</li>
+    <li><strong>面向境内公众:</strong>需要把公众流量自动分流到备案模型、内部流量留给 Claude——这套按数据等级分流的逻辑由网关替你做。</li>
+    <li><strong>高可用:</strong>某个模型或线路抖动时自动切换、状态续接,而不是等它自己恢复。</li>
+    <li><strong>多团队治理:</strong>按团队 / 项目 / 密钥设预算、配额与权限,调用统一计量、统一对账。</li>
+    <li><strong>少改代码:</strong>以后换模型、换云只动网关配置,业务代码不动。</li>
+  </ul>
+  <p>
+    一句话:单模型、内部用,直连就好;要在多模型、多团队、面向公众、高可用这几件事上省心,网关这一层才划算。
+  </p>
+
+  <h2>从账号池迁到合规通道</h2>
+  <p>
+    迁移成本通常很低:因为账号池与企业级通道同为 OpenAI 兼容协议,把 base_url 与密钥指向网关即可,业务代码不动。把"担心账号哪天被封"换成"接入由合同与审计托底",是企业把 Claude 用进生产的前提。
+  </p>
+
+  <p class="footnote">
+    本页就合规框架做一般性说明,不构成法律意见;具体合规判断请结合企业自身的数据出境评估与监管要求。Claude、AWS Bedrock、Google Cloud Vertex AI 及相关名称为各自权利人所有,本站仅作指明性引用,不表示其对本平台的认可或与本平台存在官方合作关系。渠道与凭证在商务沟通中出示,SMA 能力以本站说明与合同条款为准(口径日期 2026-07)。
+  </p>
+
+  <h2>常见问题</h2>
+  {qa.map((item) => (
+    <>
+      <h3>{item.q}</h3>
+      <p>{item.a}</p>
+    </>
+  ))}
+
+  <p>开始接入:应用侧沿用 OpenAI SDK、把 base_url 指向网关即可。<a href="/zh/sma">查看产品介绍与接入示例 →</a></p>
+
+  <div class="related">
+    <p>相关问题:</p>
+    <ul>
+      <li><a href="/zh/compliant-overseas-llm-access">企业如何合规接入海外大模型</a></li>
+      <li><a href="/zh/compare/api-relay-alternative">账号池 / 转售类 API 的企业级合规替代与迁移</a></li>
+      <li><a href="/zh/overseas-llm-high-availability">海外大模型高可用接入</a></li>
+    </ul>
+  </div>
+</Base>
