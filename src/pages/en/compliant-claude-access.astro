@@ -34,7 +34,7 @@ const qa: QA[] = [
 
   <h1>How can an enterprise use Claude compliantly and stably (without ban-prone account pools)?</h1>
   <p class="answer">
-    The compliant, stable way to use Claude is through a cloud provider's commercial platform — Claude is offered as a managed service on AWS Bedrock and Google Cloud Vertex AI, where you contract under your own cloud entity, with a contract, technical-service invoicing, and full audit, rather than depending on personal account pools that get banned in bulk by risk control. By scenario, internal business use and public-facing services are governed differently, and the latter must use registered models. On top of this, SMA provides one OpenAI-compatible API for unified access, full audit trails, and failover, so access doesn't break because of a single account or route.
+    The compliant, stable way to use Claude is through a cloud provider's commercial platform — Claude is offered as a managed service on AWS Bedrock and Google Cloud Vertex AI, where you contract under your own cloud entity, with a contract, technical-service invoicing, and full audit, rather than depending on personal account pools that get banned in bulk by risk control. By scenario, internal business use and public-facing services are governed differently, and the latter must use registered models. As an authorized AWS partner, SMA is already connected to Claude on the AWS Bedrock commercial platform, and provides one OpenAI-compatible API for unified access, full audit trails, and failover on top, so access doesn't break because of a single account or route.
   </p>
 
   <h2>Why Claude accounts keep getting banned</h2>
@@ -73,7 +73,7 @@ const qa: QA[] = [
 
   <h2>What SMA does here</h2>
   <p>
-    SMA is an enterprise AI gateway: applications integrate through one OpenAI-compatible API, while the gateway records full call audit, routes requests to registered domestic models by data class, redacts sensitive data at the egress, and on model or route anomalies fails over with error-graded switching that preserves context via the state header. So access doesn't break because of a single account or one route. Available models follow live data and contracts — only real connected ones are listed, never onboarding ones.
+    SMA is an enterprise AI gateway: applications integrate through one OpenAI-compatible API, while the gateway records full call audit, routes requests to registered domestic models by data class, redacts sensitive data at the egress, and on model or route anomalies fails over with error-graded switching that preserves context via the state header. So access doesn't break because of a single account or one route. Claude is already connected and routable through SMA's authorized AWS Bedrock channel; other models follow live data and contracts, with only real connected ones listed.
   </p>
 
   <h2>Gateway, or connect straight to Bedrock / Vertex?</h2>
@@ -97,7 +97,7 @@ const qa: QA[] = [
   </p>
 
   <p class="footnote">
-    This page gives a general description of the compliance framework and is not legal advice; specific compliance judgments should follow your own data-export assessment and applicable regulations. Claude, AWS Bedrock, Google Cloud Vertex AI, and related names belong to their respective holders and are referenced nominatively, without implying their endorsement of or official partnership with this platform. Channels and documents are shown during commercial discussion; SMA capabilities follow this site's description and contract terms (as of 2026-07).
+    This page gives a general description of the compliance framework and is not legal advice; specific compliance judgments should follow your own data-export assessment and applicable regulations. SMA is an authorized AWS partner providing Claude access on the AWS Bedrock commercial platform; AWS and Amazon Bedrock are trademarks of Amazon. Claude is a trademark of Anthropic and Vertex AI of Google, referenced nominatively, without implying their endorsement of or official partnership with this platform. Channels and authorization documents are shown during commercial discussion; SMA capabilities follow this site's description and contract terms (as of 2026-07).
   </p>
 
   <h2>FAQ</h2>
@@ -108,7 +108,7 @@ const qa: QA[] = [
     </>
   ))}
 
-  <p>Get started: keep using the OpenAI SDK and point base_url at the gateway. <a href="/en/sma">See the product overview and integration example →</a></p>
+  <p>Get started: SMA has a compliant Claude channel ready via authorized AWS Bedrock — keep using the OpenAI SDK and point base_url at the gateway. <a href="/en/sma">See the product overview and integration example →</a></p>
 
   <div class="related">
     <p>Related:</p>
