@@ -274,11 +274,17 @@ def write_manual_checklist(queries, manual_engines, out_dir=None):
     out_dir = out_dir or ROOT / "geo" / "reports"
     out_dir.mkdir(parents=True, exist_ok=True)
     today = date.today()
+    # money 优先:这些联网检索引擎决定真实引流,自动脚本不覆盖;时间不够先测 money
+    order = {"money": 0, "secondary": 1}
+    ordered = sorted(queries, key=lambda q: (order.get(q.get("weight", ""), 2), q["id"]))
+    n_money = sum(1 for q in ordered if q.get("weight") == "money")
     lines = [f"# 人工月检清单 {today:%Y-%m}", "",
-             "同一查询矩阵,逐引擎人工提问并记录。`提及` 填 是/否;`引用源` 记录回答中给出的链接。", ""]
+             "同一查询矩阵,逐引擎人工提问并记录。`提及` 填 是/否;`引用源` 记录回答中给出的链接。",
+             f"这 {len(manual_engines)} 个联网检索引擎决定真实引流,自动脚本不覆盖——每引擎 {len(ordered)} 条,"
+             f"money {n_money} 条置顶,时间不够先测 money。", ""]
     for eng in manual_engines:
-        lines += [f"## {eng}", "", "| query_id | 查询 | 提及 | 引用源 | 备注 |", "|---|---|---|---|---|"]
-        lines += [f"| {q['id']} | {q['query']} |  |  |  |" for q in queries]
+        lines += [f"## {eng}", "", "| query_id | 权重 | 查询 | 提及 | 引用源 | 备注 |", "|---|---|---|---|---|---|"]
+        lines += [f"| {q['id']} | {q.get('weight', '')} | {q['query']} |  |  |  |" for q in ordered]
         lines.append("")
     out = out_dir / f"manual-checklist-{today:%Y-%m}.md"
     out.write_text("\n".join(lines) + "\n")
