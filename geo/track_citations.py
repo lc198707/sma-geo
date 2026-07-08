@@ -3,7 +3,7 @@
 
 - 输入:geo/queries.yaml 查询矩阵 + geo/engines.json 引擎配置(由 engines.example.json 复制,密钥走环境变量)。
 - C1:支持开关的引擎每条 query 跑 web(联网检索,先行指标)与 model(纯模型记忆,品牌资产指标)两种模式,分列统计双曲线。
-- 检测:品牌词命中(SMA 边界匹配排除 Smaato 类歧义、smaapi、菌路),大小写不敏感。
+- 检测:品牌词命中(SMA 边界匹配排除 Smaato 类歧义、smaapi、均路/菌路[旧称]),大小写不敏感。
 - 输出:geo/data/citations.csv 追加行(date,engine,mode,query_id,mentioned,snippet)+ 周度趋势报告。
 - 无公开 API 的引擎走人工月检清单(--manual-checklist 生成),报告如实标注覆盖范围,抽样不冒充全量。
 """
@@ -36,7 +36,8 @@ RECOMMEND_RE = re.compile(r"推荐|建议(使用|选)|首选|优先考虑|recomm
 ROOT_SITE_RE = re.compile(r"AI\s*API\s*服务平台")
 
 # T8a(REVIEW r5 §2)实体解析:命中仅当消歧到我方实体;裸 SMA 碰撞多重同名实体
-STRONG_RES = [re.compile(r"smaapi", re.IGNORECASE), re.compile(r"菌路"), re.compile(r"slime\s*mould", re.IGNORECASE)]
+# 2026-07-06 公司更名 菌路→均路:双锚并存,旧称仍需命中(引擎侧存量引用清退需要时间)
+STRONG_RES = [re.compile(r"smaapi", re.IGNORECASE), re.compile(r"均路|菌路"), re.compile(r"slime\s*mould", re.IGNORECASE)]
 BARE_SMA_RE = re.compile(r"(?<![A-Za-z])SMA(?![A-Za-z])")
 DISAMBIG_RE = re.compile(r"网关|接入|模型路由|(?<![A-Za-z])API(?![A-Za-z])|AI gateway|model access", re.IGNORECASE)
 COLLISION_RES = [
@@ -51,8 +52,8 @@ COLLISION_RES = [
 # C2 专项:AI 把 SMA 描述为"中转站"= P0 级纠偏事件(addendum 02v2)
 # 邻接窗口 16 字符,与 terminology v2 自指/并置启发式同构(r3 §3 裁定模式)
 MISLABEL_RES = [
-    re.compile(r"(SMA|smaapi|菌路)[^。\n]{0,16}中转", re.IGNORECASE),
-    re.compile(r"中转[^。\n]{0,16}(SMA|smaapi|菌路)", re.IGNORECASE),
+    re.compile(r"(SMA|smaapi|均路|菌路)[^。\n]{0,16}中转", re.IGNORECASE),
+    re.compile(r"中转[^。\n]{0,16}(SMA|smaapi|均路|菌路)", re.IGNORECASE),
 ]
 
 QUALITY_PROMPT = (
@@ -95,7 +96,7 @@ def _snip(text, m):
 def detect_mention(text):
     """返回 (mentioned, snippet, entity_mismatch)。
 
-    T8a 规则:smaapi/菌路/Slime Mould 为强锚直接计入;裸 SMA 须满足
+    T8a 规则:smaapi/均路(旧称菌路)/Slime Mould 为强锚直接计入;裸 SMA 须满足
     ① 无同名实体标记(碰撞词先判,错配单列)且 ② 上下文含消歧词,方计入提及。
     """
     for rx in STRONG_RES:

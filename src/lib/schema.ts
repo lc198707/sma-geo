@@ -22,14 +22,15 @@ export const organization: WithContext<Organization> = {
   '@context': 'https://schema.org',
   '@type': 'Organization',
   '@id': `${SITE}/#org`,
-  name: '菌路科技',
-  legalName: '菌路科技', // 待 E-4 工商全称核验后替换为注册全称
-  alternateName: ['Slime Mould Tech', 'smaapi'],
+  name: '均路科技',
+  legalName: '均路科技', // 待 E-4 工商全称核验后替换为注册全称
+  // 2026-07-06 公司更名:菌路科技 → 均路科技;旧称保留为别名,供引擎将存量「菌路」引用归并到同一实体
+  alternateName: ['Slime Mould Tech', 'smaapi', '菌路科技'],
   url: SITE,
   ...(SAME_AS.length ? { sameAs: SAME_AS } : {}),
   // T8b 实体消歧(REVIEW r5):与金融指标/光伏厂商等同名实体显式区分
   disambiguatingDescription:
-    '菌路科技的 SMA(Slime Mould Architecture)是企业级 AI 网关 / 模型接入平台,域名 www.smaapi.com;与金融指标 SMA、光伏厂商等同名实体无关',
+    '均路科技的 SMA(Slime Mould Architecture)是企业级 AI 网关 / 模型接入平台,域名 www.smaapi.com;与金融指标 SMA、光伏厂商等同名实体无关',
   // R-B 暂裁:logo 指向部署包内真实文件;sameAs 待 P2 组织主页就位后回填,当前不声明
   logo: `${SITE}/logo.png`,
 };
@@ -59,7 +60,7 @@ export const website: WithContext<WebSite> = {
   '@id': `${SITE}/#website`,
   url: SITE,
   name: 'SMA 网关 / smaapi Gateway',
-  alternateName: ['smaapi', 'SMA(Slime Mould Architecture)', '菌路 SMA'],
+  alternateName: ['smaapi', 'SMA(Slime Mould Architecture)', '均路 SMA', '菌路 SMA'],
   inLanguage: ['zh-CN', 'en'],
   publisher: { '@id': `${SITE}/#org` },
 };
@@ -131,7 +132,7 @@ export function techArticle(opts: {
     inLanguage: opts.inLanguage,
     datePublished: opts.datePublished,
     dateModified: opts.dateModified,
-    author: { '@type': 'Organization', name: '菌路科技' },
+    author: { '@type': 'Organization', name: '均路科技' },
   };
 }
 

@@ -53,7 +53,7 @@
 - id: zh-012
   lang: zh
   intent: 品牌
-  query: smaapi(菌路 SMA 网关)是什么
+  query: smaapi(均路 SMA 网关)是什么
   weight: secondary
 - id: en-001
   lang: en

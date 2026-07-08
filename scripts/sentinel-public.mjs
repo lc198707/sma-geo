@@ -40,7 +40,7 @@ try {
   const title = r.body.match(/<title[^>]*>([^<]*)<\/title>/)?.[1] ?? '';
   const digest = createHash('sha256').update(r.body || r.location).digest('hex').slice(0, 12);
   console.log(`[根域监视] status=${r.status} title="${title.slice(0, 40)}" location="${r.location}" digest=${digest}`);
-  if (/smaapi\s*Gateway|菌路|SMA 网关/i.test(r.body)) {
+  if (/smaapi\s*Gateway|均路|菌路|SMA 网关/i.test(r.body)) {
     console.log('::warning::根域内容出现我方标识 —— 假冒风险,需人工核查(r9 §4 ①)');
   }
   if ([301, 302, 308].includes(r.status) && r.location && !r.location.startsWith(site)) {

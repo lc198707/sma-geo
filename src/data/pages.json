@@ -6,7 +6,7 @@
       "lang": "zh",
       "alternate": "/en/",
       "title": "SMA — 企业级 AI 网关:多模型统一接入、智能路由、治理与审计",
-      "description": "SMA 网关(菌路 SMA,www.smaapi.com)是面向企业的 AI 网关 / 模型接入平台:以一套 OpenAI 兼容 API 统一接入多家大模型,提供智能路由、成本与权限治理、全链路审计。",
+      "description": "SMA 网关(均路 SMA,www.smaapi.com)是面向企业的 AI 网关 / 模型接入平台:以一套 OpenAI 兼容 API 统一接入多家大模型,提供智能路由、成本与权限治理、全链路审计。",
       "datePublished": "2026-06-10",
       "dateModified": "2026-06-11",
       "llms": {
@@ -20,7 +20,7 @@
       "lang": "zh",
       "alternate": "/en/sma",
       "title": "SMA 企业级 AI 网关 — 产品介绍:智能路由、治理与审计、接入与团队 | smaapi",
-      "description": "SMA 网关(菌路 SMA,www.smaapi.com)产品介绍:一套 OpenAI 兼容 API 统一接入多家大模型,提供智能路由、成本与权限治理、全链路审计;含接入示例与首席科学家团队。",
+      "description": "SMA 网关(均路 SMA,www.smaapi.com)产品介绍:一套 OpenAI 兼容 API 统一接入多家大模型,提供智能路由、成本与权限治理、全链路审计;含接入示例与首席科学家团队。",
       "datePublished": "2026-06-12",
       "dateModified": "2026-06-12",
       "llms": {
@@ -315,7 +315,7 @@
       "alternate": "/en/reports/model-access-benchmark",
       "draft": true,
       "title": "smaapi 海外模型企业接入指数:已连通模型可用率与延迟月报 | SMA",
-      "description": "由 SMA 网关(www.smaapi.com,菌路科技)探活与生产监控实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的 30 天滚动可用率与 P50/P95 延迟,月更;仅统计样本量达阈值的模型,数字构建时注入、不手填。",
+      "description": "由 SMA 网关(www.smaapi.com,均路科技)探活与生产监控实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的 30 天滚动可用率与 P50/P95 延迟,月更;仅统计样本量达阈值的模型,数字构建时注入、不手填。",
       "datePublished": "2026-07-05",
       "dateModified": "2026-07-05",
       "llms": {
