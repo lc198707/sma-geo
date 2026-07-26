@@ -1,7 +1,7 @@
 {
   "published": true,
   "reason": "",
-  "as_of": "2026-07-25",
+  "as_of": "2026-07-26",
   "window_days": null,
   "p95_definition": "v1 探活可用率版:不含延迟分位数;P50/P95 待网关补 per-request 延迟记录后由 v2 发布。",
   "measurement": "SMA 网关主动探活(生产);可用率 = 探针成功率(单次调用超时上限 90 秒),独立于用户侧错误。",
@@ -17,7 +17,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-domestic-code",
@@ -26,7 +26,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-domestic-fast",
@@ -35,7 +35,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-fast",
@@ -44,7 +44,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-overseas-claude",
@@ -53,7 +53,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-overseas-gpt",
@@ -62,16 +62,16 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-overseas-pro",
       "channel_type": "云端直连(探活口径)",
-      "availability_pct": 97.92,
+      "availability_pct": 100,
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     },
     {
       "model_alias": "sma-strong-reasoner",
@@ -80,7 +80,7 @@
       "p50_ms": null,
       "p95_ms": null,
       "sample_count": 48,
-      "as_of": "2026-07-25"
+      "as_of": "2026-07-26"
     }
   ]
 }
