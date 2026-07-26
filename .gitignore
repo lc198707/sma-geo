@@ -3,6 +3,7 @@
 __pycache__/
 *.pyc
 .env
+.env.*
 docs/internal/
 REVIEW-*.md
 node_modules/

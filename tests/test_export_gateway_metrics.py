@@ -66,6 +66,24 @@ check(build_export(multi)["as_of"] == "2026-07-03", "⑥ 顶层 as_of 应为全�
 bad = {"models": {"real-b": {"alias": "m-b", "domains": {"code": {"availability": "0.9", "samples": 5, "questions": 1, "last_success": True, "last_run": "2026-07-01T00:00:00+00:00"}}}}}
 check(build_export(bad)["status"] == "no-data", "⑦ 非法 availability 域应跳过")
 
+# ⑧ 同一对外 alias 挂多条后端通道(多 real_id)→ 合并为一行,不让公开表出现自相矛盾的两行
+dup = {"models": {
+    "real-a1": {"alias": "m-dup", "domains": {"code": domain(1.0, 6, 2, last_run="2026-06-19T00:00:00+00:00")}},
+    "real-a2": {"alias": "m-dup", "domains": {"code": domain(0.5, 2, 2, last_run="2026-07-23T00:00:00+00:00")}},
+}}
+d8 = build_export(dup, min_samples=10)
+check(len(d8["rows"]) == 1, f"⑧ 同 alias 多通道应合并为 1 行,实为 {len(d8['rows'])}")
+check(d8["merged_duplicate_rows"] == 1, f"⑧ 应记录合并条数=1,实为 {d8.get('merged_duplicate_rows')}")
+r8 = d8["rows"][0]
+# 加权:(100*6 + 50*2)/(6+2) = 87.5
+check(abs(r8["availability_pct"] - 87.5) < 1e-6, f"⑧ 合并应按轮数加权=87.5,实为 {r8['availability_pct']}")
+check(r8["sample_count"] == 12 + 4, f"⑧ 合并后样本量应求和=16,实为 {r8['sample_count']}")
+check(r8["as_of"] == "2026-07-23", f"⑧ 合并后 as_of 应取最新=2026-07-23,实为 {r8['as_of']}")
+check("_w" not in r8, "⑧ 合并权重字段不得进入对外产物")
+
+# ⑨ 单行路径也不得泄漏内部权重字段
+check("_w" not in build_export(probe, min_samples=10)["rows"][0], "⑨ 单行产物不得含 _w")
+
 if failures:
     print(f"export_gateway_metrics 测试失败({len(failures)}):")
     for f in failures:

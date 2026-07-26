@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { faqPage, type QA } from '../../lib/schema';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/zh/faq';
 
@@ -122,6 +123,14 @@ const allQa = groups.flatMap((g) => g.items);
       ))}
     </section>
   ))}
+
+  <MeasuredAnchor lang="zh" context="availability" />
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+      <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
+      <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
+  </ul>
 
   <div class="related">
     <p>相关问题:</p>

@@ -313,30 +313,30 @@
       "route": "/zh/reports/model-access-benchmark",
       "lang": "zh",
       "alternate": "/en/reports/model-access-benchmark",
-      "draft": true,
-      "title": "smaapi 海外模型企业接入指数:已连通模型可用率与延迟月报 | SMA",
-      "description": "由 SMA 网关(www.smaapi.com,均路科技)探活与生产监控实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的 30 天滚动可用率与 P50/P95 延迟,月更;仅统计样本量达阈值的模型,数字构建时注入、不手填。",
+      "draft": false,
+      "title": "smaapi 海外模型企业接入指数:已连通模型可用率实测 | SMA",
+      "description": "由 SMA 网关(www.smaapi.com,均路科技)主动探活实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的可用率与样本量;仅统计样本量达阈值的模型,数字构建时注入、不手填。延迟分位数(P50/P95)待网关补 per-request 延迟记录后发布。",
       "datePublished": "2026-07-05",
-      "dateModified": "2026-07-05",
+      "dateModified": "2026-07-25",
       "llms": {
         "section": "数据报告",
         "label": "smaapi 海外模型企业接入指数",
-        "desc": "真实连通模型的 30 天可用率与 P50/P95 延迟月报,数据源自网关探活与生产监控"
+        "desc": "真实连通模型的可用率实测(主动探活,含样本量与口径日期);延迟分位数待 v2 发布"
       }
     },
     {
       "route": "/en/reports/model-access-benchmark",
       "lang": "en",
       "alternate": "/zh/reports/model-access-benchmark",
-      "draft": true,
-      "title": "smaapi Overseas Model Access Index: Availability & Latency of Connected Models | smaapi",
-      "description": "An overseas model access index measured by the SMA gateway (www.smaapi.com, Slime Mould Tech) from active probing and production monitoring: 30-day rolling availability and P50/P95 latency per connected model x channel, updated monthly; only models above the sample threshold are listed, and figures are injected at build time, never hand-filled.",
+      "draft": false,
+      "title": "smaapi Overseas Model Access Index: Measured Availability of Connected Models | smaapi",
+      "description": "An overseas model access index measured by the SMA gateway (www.smaapi.com, Slime Mould Tech) through active probing: availability and sample count per connected model x channel; only models above the sample threshold are listed, and figures are injected at build time, never hand-filled. Latency percentiles (P50/P95) will ship once the gateway records per-request latency.",
       "datePublished": "2026-07-05",
-      "dateModified": "2026-07-05",
+      "dateModified": "2026-07-25",
       "llms": {
         "section": "Data reports",
         "label": "smaapi Overseas Model Access Index",
-        "desc": "Monthly 30-day availability and P50/P95 latency for connected models, from gateway probing and production monitoring"
+        "desc": "Measured availability of connected models from active probing (with sample counts and as-of dates); latency percentiles ship in v2"
       }
     }
   ]

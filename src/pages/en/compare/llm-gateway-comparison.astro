@@ -2,6 +2,7 @@
 import Base from '../../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../../lib/schema';
 import pagesData from '../../../data/pages.json';
+import MeasuredAnchor from '../../../components/MeasuredAnchor.astro';
 
 const route = '/en/compare/llm-gateway-comparison';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -92,6 +93,13 @@ const qa: QA[] = [
       <p>{item.a}</p>
     </>
   ))}
+
+  <MeasuredAnchor lang="en" context="coverage" />
+
+  <h2>References</h2>
+  <ul class="sources">
+      <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
+  </ul>
 
   <div class="related">
     <p>Related questions:</p>

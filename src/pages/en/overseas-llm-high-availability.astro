@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/en/overseas-llm-high-availability';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -78,6 +79,14 @@ const qa: QA[] = [
   ))}
 
   <p>Get started: keep your OpenAI SDK and point base_url at the gateway. <a href="/en/sma">See the product overview and integration example →</a></p>
+
+  <MeasuredAnchor lang="en" context="availability" />
+
+  <h2>References</h2>
+  <ul class="sources">
+      <li><a href="https://status.openai.com" rel="nofollow noopener" target="_blank">OpenAI status page</a> — first-hand source for provider-side availability incidents</li>
+      <li><a href="https://status.anthropic.com" rel="nofollow noopener" target="_blank">Anthropic status page</a> — first-hand source for Claude-side availability incidents</li>
+  </ul>
 
   <div class="related">
     <p>Related:</p>

@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro';
 import { faqPage, type QA } from '../../lib/schema';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/en/faq';
 
@@ -128,6 +129,14 @@ const allQa = groups.flatMap((g) => g.items);
       ))}
     </section>
   ))}
+
+  <MeasuredAnchor lang="en" context="availability" />
+
+  <h2>References</h2>
+  <ul class="sources">
+      <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
+      <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
+  </ul>
 
   <div class="related">
     <p>Related questions:</p>

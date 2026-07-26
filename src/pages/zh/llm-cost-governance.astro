@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/zh/llm-cost-governance';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -77,6 +78,14 @@ const qa: QA[] = [
   ))}
 
   <p>开始接入:应用侧沿用 OpenAI SDK、把 base_url 指向网关即可。<a href="/zh/sma">查看产品介绍与接入示例 →</a></p>
+
+  <MeasuredAnchor lang="zh" context="governance" />
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+      <li><a href="https://platform.openai.com/docs/guides/rate-limits" rel="nofollow noopener" target="_blank">OpenAI 限流与配额官方说明</a>——供应商侧限流口径,是网关配额设计的外部约束</li>
+      <li><a href="https://www.anthropic.com/pricing" rel="nofollow noopener" target="_blank">Anthropic 官方定价页</a>——官方单价是成本核算与对账的基准</li>
+  </ul>
 
   <div class="related">
     <p>相关问题:</p>

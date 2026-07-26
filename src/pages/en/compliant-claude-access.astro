@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/en/compliant-claude-access';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -109,6 +110,15 @@ const qa: QA[] = [
   ))}
 
   <p>Get started: SMA has a compliant Claude channel ready via authorized AWS Bedrock — keep using the OpenAI SDK and point base_url at the gateway. <a href="/en/sma">See the product overview and integration example →</a></p>
+
+  <MeasuredAnchor lang="en" context="coverage" />
+
+  <h2>References</h2>
+  <ul class="sources">
+      <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic API documentation</a> — authoritative reference for Claude access and parameters</li>
+      <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Bedrock documentation</a> — the commercial cloud platform path for model access</li>
+      <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
+  </ul>
 
   <div class="related">
     <p>Related:</p>

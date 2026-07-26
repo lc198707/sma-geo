@@ -21,7 +21,14 @@ import os
 import sys
 from pathlib import Path
 
-MEASUREMENT = "SMA 网关主动探活(生产);可用率 = 探针成功率,独立于用户侧错误。"
+# 口径纪律:可用率=探针成功率,而"是否成功"取决于单次调用的超时上限——换超时会换结论,
+# 故超时值必须随数字一起对外披露。此处文本须与实际探活所用 run_probes(timeout_s=...) 保持一致;
+# 改探活参数必须同步改本行(否则公开口径与测量事实脱节)。
+PROBE_TIMEOUT_S = 90
+MEASUREMENT = (
+    f"SMA 网关主动探活(生产);可用率 = 探针成功率(单次调用超时上限 {PROBE_TIMEOUT_S} 秒),"
+    "独立于用户侧错误。"
+)
 P95_NOTE = "v1 探活可用率版:不含延迟分位数;P50/P95 待网关补 per-request 延迟记录后由 v2 发布。"
 DEFAULT_CHANNEL = "云端直连(探活口径)"
 
@@ -38,6 +45,38 @@ def _label(labels: dict, real_id: str, alias: str, field: str, fallback: str) ->
     m = labels.get(real_id) or labels.get(alias) or {}
     v = m.get(field)
     return v if isinstance(v, str) and v else fallback
+
+
+def _merge_duplicate_aliases(rows: list[dict]) -> tuple[list[dict], int]:
+    """同一对外口径(model_alias + channel_type)对应多个内部 real_id 时合并为一行。
+
+    网关同一个对外模型名可能挂多条后端通道(不同 real_id),逐条输出会让同一模型在
+    公开表里出现多行互相矛盾的可用率(真实数据端到端才暴露的缺陷)。
+    合并口径:可用率按探活轮数加权平均、样本量求和、as_of 取最新一次探活日期。
+    仍不手填任何数字——合并只是同口径聚合。
+    """
+    grouped: dict[tuple[str, str], list[dict]] = {}
+    for r in rows:
+        grouped.setdefault((r["model_alias"], r["channel_type"]), []).append(r)
+    out: list[dict] = []
+    dupes = 0
+    for (alias, channel), items in grouped.items():
+        if len(items) == 1:
+            r = dict(items[0])
+            r.pop("_w", None)
+            out.append(r)
+            continue
+        dupes += len(items) - 1
+        wtot = sum(max(1, int(i.get("_w") or 1)) for i in items)
+        avail = sum(i["availability_pct"] * max(1, int(i.get("_w") or 1)) for i in items) / wtot
+        out.append({
+            "model_alias": alias,
+            "channel_type": channel,
+            "availability_pct": round(avail, 2),
+            "sample_count": sum(int(i["sample_count"]) for i in items),
+            "as_of": max(i["as_of"] for i in items),
+        })
+    return out, dupes
 
 
 def build_export(probe_results: dict, labels: dict | None = None, min_samples: int = 30) -> dict:
@@ -87,8 +126,10 @@ def build_export(probe_results: dict, labels: dict | None = None, min_samples: i
             "availability_pct": round(wsum / nsamples * 100.0, 2),
             "sample_count": ncalls,
             "as_of": as_of,
+            "_w": nsamples,  # 合并权重(轮数),合并后删除,不进对外产物
             # 延迟:v1 不导出(留给 build-geo-report 留白;绝不手填)
         })
+    rows, merged_dupes = _merge_duplicate_aliases(rows)
     rows.sort(key=lambda r: (r["model_alias"], r["channel_type"]))
     return {
         "status": "live" if rows else "no-data",
@@ -97,6 +138,7 @@ def build_export(probe_results: dict, labels: dict | None = None, min_samples: i
         "measurement": MEASUREMENT,
         "p95_definition": P95_NOTE,
         "sample_threshold": int(min_samples),
+        "merged_duplicate_rows": merged_dupes,
         "rows": rows,
     }
 

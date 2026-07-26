@@ -1,0 +1,72 @@
+---
+// 实测数据锚点:把「模型接入指数」的真实数字下沉到各内容页,补上可被生成式引擎摘用的具体数据。
+//
+// 纪律:数字一律从构建产物 geo-report.generated.json 派生,任何一处都不手填;
+// 数据未发布(published=false)时整块不渲染——缺项留白,不用文字兜话。
+// 单一真源:数据页更新 → 所有引用该组件的页面同步,不会出现各页数字互相打架。
+import report from '../data/geo-report.generated.json';
+
+interface Props {
+  lang: 'zh' | 'en';
+  /** 引用语境:决定引导句的措辞,不影响数字本身 */
+  context?: 'availability' | 'coverage' | 'governance';
+}
+const { lang, context = 'availability' } = Astro.props;
+
+const rows = report.published === true ? report.rows : [];
+const modelCount = rows.length;
+const perfectCount = rows.filter((r) => r.availability_pct >= 100).length;
+const lowest = rows.length ? Math.min(...rows.map((r) => r.availability_pct)) : null;
+const sampleSet = [...new Set(rows.map((r) => r.sample_count))];
+const sampleMin = sampleSet.length ? Math.min(...sampleSet) : 0;
+const sampleTotal = rows.reduce((s, r) => s + r.sample_count, 0);
+
+const href = lang === 'zh' ? '/zh/reports/model-access-benchmark' : '/en/reports/model-access-benchmark';
+const label = lang === 'zh' ? 'smaapi 海外模型企业接入指数' : 'smaapi Overseas Model Access Index';
+---
+
+{modelCount > 0 && (
+  <aside class="measured">
+    <p>
+      {lang === 'zh' ? (
+        <>
+          <strong>实测数据(可核验):</strong>截至 {report.as_of},SMA 网关对 {modelCount} 个已连通模型 × 通道做主动探活,
+          共 {sampleTotal} 次真实调用;其中 {perfectCount} 项本期探活可用率为 100%,最低一项 {lowest}%,单项样本量不低于 {sampleMin} 次。
+          {context === 'coverage' && '连通模型覆盖国产与国际两侧,逐行口径公开。'}
+          {context === 'governance' && '所有调用经同一出口计量,可按密钥与项目对账。'}
+          可用率口径为探针成功率(单次调用超时上限 90 秒),独立于用户侧错误;样本量低于阈值的模型不进表。
+          逐行矩阵与统计口径见<a href={href}>{label}</a>——页面数字由构建管道从网关导出注入,不手填。
+        </>
+      ) : (
+        <>
+          <strong>Measured data (verifiable):</strong> as of {report.as_of}, the SMA gateway actively probed {modelCount} connected
+          model x channel entries across {sampleTotal} real calls; {perfectCount} of them returned 100% probe availability this
+          period, the lowest was {lowest}%, with no entry below {sampleMin} samples.
+          {context === 'coverage' && ' Connected models span both Chinese and international providers, published row by row.'}
+          {context === 'governance' && ' Every call is metered through a single egress and reconcilable per key and project.'}
+          {' '}Availability means probe success rate under a 90-second per-call timeout, independent of client-side errors; models
+          below the sample threshold are excluded. Full matrix and methodology: <a href={href}>{label}</a> — figures injected by the
+          build pipeline from the gateway export, never hand-filled.
+        </>
+      )}
+    </p>
+  </aside>
+)}
+
+<style>
+  .measured {
+    margin: 1.6rem 0;
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid rgba(215, 166, 66, 0.55);
+    border-radius: 0 10px 10px 0;
+    background: rgba(215, 166, 66, 0.06);
+  }
+  .measured p {
+    margin: 0;
+    font-size: 0.94rem;
+    line-height: 1.75;
+  }
+  .measured strong {
+    color: #ffe6a8;
+  }
+</style>

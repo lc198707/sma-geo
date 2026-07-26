@@ -1,11 +1,45 @@
 ---
 import Base from '../layouts/Base.astro';
-import { softwareApplication } from '../lib/schema';
+import { softwareApplication, faqPage, type QA } from '../lib/schema';
 import RouteCore from '../components/RouteCore.astro';
+import report from '../data/geo-report.generated.json';
+
+// 首页实测数字一律从构建产物派生,不手填:数据页更新则首页同步,永不脱节。
+// 无真实数据(published=false)时整段不渲染——缺项留白,不用文字兜话。
+const rows = report.published === true ? report.rows : [];
+const modelCount = rows.length;
+const perfectCount = rows.filter((r) => r.availability_pct >= 100).length;
+const lowest = rows.length ? Math.min(...rows.map((r) => r.availability_pct)) : null;
+const sampleSet = [...new Set(rows.map((r) => r.sample_count))];
+const sampleText = sampleSet.length === 1
+  ? `每项样本量 ${sampleSet[0]} 次真实调用`
+  : `样本量 ${Math.min(...sampleSet)}–${Math.max(...sampleSet)} 次真实调用`;
+
+const qa: QA[] = [
+  {
+    q: 'SMA 是什么的缩写?',
+    a: 'SMA 是 Slime Mould Architecture,均路科技的企业级 AI 网关 / 模型接入平台,域名 www.smaapi.com。它与金融指标 SMA(简单移动平均线)、光伏逆变器厂商、射频同轴接头等同名实体无关。',
+  },
+  {
+    q: '接入 SMA 需要改造现有代码吗?',
+    a: '不需要。SMA 提供 OpenAI 兼容 API,应用侧沿用现有 OpenAI SDK,把 base_url 指向网关、换成网关签发的密钥即可接入;模型厂商密钥集中托管在网关侧,不进业务代码。',
+  },
+  {
+    q: 'SMA 网关支持哪些大模型?',
+    a: '同时接入国产与国际主流大模型,按任务特征与模型实时状态路由。当前真实连通的模型及其探活可用率、样本量与统计口径,逐行公布在模型接入指数页,数字由构建管道注入、不手填。',
+  },
+  {
+    q: '提示词、密钥与调用日志保存在哪里?',
+    a: '取决于部署形态:云端形态下由网关统一托管并留存审计记录;私有化部署形态下网关运行在企业自有环境,提示词、密钥与日志不出企业边界。数据边界与责任在合同中明确约定。',
+  },
+];
 ---
 
 <Base route="/" theme="dark">
-  <script slot="jsonld" type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
 
   <section class="landing">
     <div class="landing-fx" aria-hidden="true"></div>
@@ -29,17 +63,53 @@ import RouteCore from '../components/RouteCore.astro';
       SMA 网关(均路 SMA,www.smaapi.com)是面向企业的 AI 网关 / 模型接入平台:以一套 OpenAI 兼容 API
       统一接入多家大模型,提供智能路由、成本与权限治理、全链路审计,让企业可控地使用多模型能力。
     </p>
+    <h2>企业为什么需要 AI 网关?</h2>
     <p>
       多模型并存已是企业用 AI 的常态:不同任务适合不同模型,供应商各有独立接口、密钥与计费。逐家直连的结果是密钥散落、成本没有统一口径、调用无法审计、切换供应商要改代码。SMA
       在企业应用与模型供应商之间加一层统一的接入与治理层,把这些问题收敛到一个出口。
     </p>
+
+    <h2>SMA 网关的三层能力是什么?</h2>
+    <ul>
+      <li><strong>智能路由与故障切换:</strong>按业务特征与各模型实时状态(可用性、延迟、成本)分发流量,故障时自动降级与切换,切换对应用透明。</li>
+      <li><strong>成本与权限治理:</strong>为团队、应用、密钥设置预算、配额与模型访问范围,所有调用统一计量、可按密钥与项目对账。</li>
+      <li><strong>全链路审计:</strong>记录每次调用的调用方、目标模型、用量与时间,可追溯、可对账,支撑合规审查。</li>
+    </ul>
+
+    {modelCount > 0 && (
+      <>
+        <h2>SMA 接入了哪些模型?可用率实测是多少?</h2>
+        <p>
+          截至 {report.as_of},网关对 {modelCount} 个已连通模型 × 通道做主动探活实测:其中 {perfectCount} 项本期探活可用率为
+          100%,最低一项为 {lowest}%,{sampleText}。可用率口径为探针成功率({report.measurement.includes('90 秒') ? '单次调用超时上限 90 秒' : '见口径说明'}),独立于用户侧错误;
+          样本量低于阈值的模型不进表。逐行矩阵、统计口径与样本量见
+          <a href="/zh/reports/model-access-benchmark">smaapi 海外模型企业接入指数</a>——页面数字由构建管道从网关导出注入,不手填。
+        </p>
+      </>
+    )}
+
+    <h2>企业怎么接入 SMA?</h2>
     <p>
-      <strong>三层能力一体:</strong>智能路由按业务特征与各模型实时状态(可用性、延迟、成本)分发流量,故障时自动降级与切换;成本与权限治理为团队、应用、密钥设置预算、配额与模型访问范围,所有调用统一计量;全链路审计记录每次调用的调用方、目标模型、用量与时间,可追溯、可对账。
+      应用侧沿用 OpenAI SDK,把 <code>base_url</code> 指向网关、换成网关签发的密钥即可接入,模型厂商密钥集中托管在网关侧、不进业务代码:
     </p>
+    <pre class="home-code"><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://www.smaapi.com/v1",  # 指向 SMA 网关
+    api_key="YOUR_SMA_KEY",                # 网关密钥,模型厂商密钥不出企业
+)</code></pre>
     <p>
-      适合需要同时接入国产与国际多家模型、并对成本、权限、合规与审计有组织级要求的企业团队。应用侧沿用
-      OpenAI SDK,把 base_url 指向网关即可接入。
+      适合需要同时接入国产与国际多家模型、并对成本、权限、合规与审计有组织级要求的企业团队。
     </p>
+
+    <h2>常见问题</h2>
+    {qa.map((item) => (
+      <>
+        <h3>{item.q}</h3>
+        <p>{item.a}</p>
+      </>
+    ))}
+
     <p class="home-more"><a href="/zh/sma">查看完整产品介绍:三层治理、接入示例与首席科学家团队 →</a></p>
   </article>
 </Base>
@@ -136,6 +206,34 @@ import RouteCore from '../components/RouteCore.astro';
   }
   .home-brief strong {
     color: #fff;
+  }
+  /* 答案分块:每个 h2 起一个可独立摘用的问答单元 */
+  .home-brief h2 {
+    margin: 2rem 0 0.6rem;
+    font-size: 1.22rem;
+    color: #fff;
+  }
+  .home-brief h3 {
+    margin: 1.3rem 0 0.4rem;
+    font-size: 1rem;
+    color: #ffe6a8;
+  }
+  .home-brief ul {
+    margin: 0.8rem 0;
+    padding-left: 1.2rem;
+  }
+  .home-brief li {
+    margin: 0.5rem 0;
+  }
+  .home-code {
+    margin: 0.9rem 0;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    border: 1px solid rgba(140, 200, 180, 0.18);
+    border-radius: 10px;
+    background: rgba(8, 20, 17, 0.6);
+    font-size: 0.84rem;
+    line-height: 1.6;
   }
   .home-more {
     margin-top: 1.3rem !important;

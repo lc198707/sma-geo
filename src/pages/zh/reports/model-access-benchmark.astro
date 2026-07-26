@@ -12,6 +12,12 @@ const published = report.published === true;
 const indexable = published && !page.draft;
 const latencyAvailable = report.latencyAvailable === true;
 const fmt = (n: number | null) => (n === null || n === undefined ? '—' : (Number.isInteger(n) ? String(n) : n.toFixed(1)));
+// 口径 fail-closed:window_days 缺省时不得回退到「30 天滚动窗口」——那是未经测量的断言。
+// 缺窗口即如实说明本期为当期探活批次;表头同理不冠以未成立的天数。
+const windowLabel = report.window_days ? `${report.window_days} 天滚动窗口` : '当期探活批次(尚未启用滚动窗口统计)';
+const availHeader = report.window_days ? `${report.window_days} 天可用率` : '可用率';
+// 延迟未发布时,标题/导语/结构化数据一律不承诺 P50/P95(承诺了却留白 = 对外口径不实)。
+const scopeText = latencyAvailable ? '可用率与 P50/P95 延迟' : '可用率';
 ---
 
 <Base route={route} theme="dark" noindex={!indexable}>
@@ -23,18 +29,20 @@ const fmt = (n: number | null) => (n === null || n === undefined ? '—' : (Numb
         description: page.description,
         url,
         inLanguage: 'zh-CN',
-        temporalCoverage: report.as_of ? `${report.as_of}(${report.window_days ?? 30} 天滚动窗口)` : '30 天滚动窗口',
+        temporalCoverage: report.as_of ? `${report.as_of}(${windowLabel})` : windowLabel,
         measurementTechnique: report.measurement,
         datePublished: page.datePublished,
         dateModified: page.dateModified,
-        variableMeasured: ['可用率(30 天滚动)', 'P50 延迟(ms)', 'P95 延迟(ms)', '样本量'],
+        variableMeasured: latencyAvailable
+          ? [availHeader, 'P50 延迟(ms)', 'P95 延迟(ms)', '样本量']
+          : [availHeader, '样本量'],
       }))} />
     )}
   </Fragment>
 
-  <h1>smaapi 海外模型企业接入指数:已连通模型可用率与延迟月报</h1>
+  <h1>smaapi 海外模型企业接入指数:已连通模型接入实测</h1>
   <p class="answer">
-    这是由 SMA 网关(www.smaapi.com)对当前真实连通的海外大模型 × 接入通道,做主动探活与生产监控实测产出的接入指数:每月给出各模型的 30 天滚动可用率与 P50/P95 延迟。只统计样本量达到发布阈值的模型,数字由构建管道注入、绝不手填;样本不足或未连通的不进主表。
+    这是由 SMA 网关(www.smaapi.com)对当前真实连通的海外大模型 × 接入通道,做主动探活实测产出的接入指数:逐个模型给出{scopeText}与样本量。只统计样本量达到发布阈值的模型,数字由构建管道注入、绝不手填;样本不足或未连通的不进主表。
   </p>
 
   {!published && (
@@ -46,17 +54,17 @@ const fmt = (n: number | null) => (n === null || n === undefined ? '—' : (Numb
   <h2>一、统计口径(可信度的根)</h2>
   <ul>
     <li><strong>数据来源</strong>:{report.measurement}</li>
-    <li><strong>统计窗口</strong>:{report.window_days ? `${report.window_days} 天滚动窗口` : '30 天滚动窗口'}{report.as_of ? `,截至 ${report.as_of}` : ''}。</li>
+    <li><strong>统计窗口</strong>:{windowLabel}{report.as_of ? `,截至 ${report.as_of}` : ''}。</li>
     <li><strong>P95 定义</strong>:{report.p95_definition}</li>
     <li><strong>发布阈值</strong>:单模型 × 通道样本量低于 {report.thresholdSampleCount} 次不进主表(样本不足的数字不可发布)。</li>
     <li><strong>生成方式</strong>:本页由构建管道自动生成,数字来自网关导出的对应行,任何一个数都可回溯到导出文件。</li>
   </ul>
 
-  <h2>二、可用率与延迟矩阵</h2>
+  <h2>二、{scopeText}矩阵</h2>
   {published ? (
     <table>
       <thead>
-        <tr><th>模型</th><th>接入通道</th><th>30 天可用率</th><th>P50(ms)</th><th>P95(ms)</th><th>样本量</th><th>口径日期</th></tr>
+        <tr><th>模型</th><th>接入通道</th><th>{availHeader}</th><th>P50(ms)</th><th>P95(ms)</th><th>样本量</th><th>口径日期</th></tr>
       </thead>
       <tbody>
         {report.rows.map((r) => (

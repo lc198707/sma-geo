@@ -1,13 +1,86 @@
 {
-  "published": false,
-  "reason": "无导出文件:网关 /internal/metrics/geo-export 端点未就绪",
-  "as_of": null,
+  "published": true,
+  "reason": "",
+  "as_of": "2026-07-25",
   "window_days": null,
-  "p95_definition": "P95 = 30 天滚动窗口内单模型×通道的第 95 百分位端到端延迟(含网络往返,不含客户端排队)。",
-  "measurement": "SMA 网关探活与生产监控;构建管道注入,数字不手填。",
-  "thresholdSampleCount": 100,
+  "p95_definition": "v1 探活可用率版:不含延迟分位数;P50/P95 待网关补 per-request 延迟记录后由 v2 发布。",
+  "measurement": "SMA 网关主动探活(生产);可用率 = 探针成功率(单次调用超时上限 90 秒),独立于用户侧错误。",
+  "thresholdSampleCount": 30,
   "droppedBelowThreshold": 0,
   "droppedInvalid": 0,
   "latencyAvailable": false,
-  "rows": []
+  "rows": [
+    {
+      "model_alias": "sma-balanced",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-domestic-code",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-domestic-fast",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-fast",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-overseas-claude",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-overseas-gpt",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-overseas-pro",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 97.92,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    },
+    {
+      "model_alias": "sma-strong-reasoner",
+      "channel_type": "云端直连(探活口径)",
+      "availability_pct": 100,
+      "p50_ms": null,
+      "p95_ms": null,
+      "sample_count": 48,
+      "as_of": "2026-07-25"
+    }
+  ]
 }

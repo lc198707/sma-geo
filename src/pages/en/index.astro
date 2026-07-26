@@ -1,11 +1,45 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { softwareApplication } from '../../lib/schema';
+import { softwareApplication, faqPage, type QA } from '../../lib/schema';
 import RouteCore from '../../components/RouteCore.astro';
+import report from '../../data/geo-report.generated.json';
+
+// Figures are derived from the build artefact, never hand-written: when the data page updates,
+// the homepage follows. With no published data the whole block is omitted (blank, not hedged prose).
+const rows = report.published === true ? report.rows : [];
+const modelCount = rows.length;
+const perfectCount = rows.filter((r) => r.availability_pct >= 100).length;
+const lowest = rows.length ? Math.min(...rows.map((r) => r.availability_pct)) : null;
+const sampleSet = [...new Set(rows.map((r) => r.sample_count))];
+const sampleText = sampleSet.length === 1
+  ? `${sampleSet[0]} real calls per entry`
+  : `${Math.min(...sampleSet)}-${Math.max(...sampleSet)} real calls per entry`;
+
+const qa: QA[] = [
+  {
+    q: 'What does SMA stand for?',
+    a: 'SMA stands for Slime Mould Architecture — the enterprise AI gateway and model access platform built by Slime Mould Tech, at www.smaapi.com. It is unrelated to the simple moving average indicator, the solar inverter vendor, or SMA coaxial connectors that share the acronym.',
+  },
+  {
+    q: 'Do we have to rewrite our code to adopt SMA?',
+    a: 'No. SMA exposes an OpenAI-compatible API: keep your existing OpenAI SDK, point base_url at the gateway, and swap in a gateway-issued key. Provider keys stay centrally held at the gateway and never enter application code.',
+  },
+  {
+    q: 'Which LLMs does the SMA gateway support?',
+    a: 'Both international and Chinese frontier models, routed by task profile and live model state. The models currently connected — with measured probe availability, sample counts, and methodology — are published row by row on the model access index; figures are injected by the build pipeline, never hand-filled.',
+  },
+  {
+    q: 'Where are prompts, keys, and call logs stored?',
+    a: 'It depends on the deployment shape: in the hosted form the gateway holds them and retains audit records; in the self-hosted form the gateway runs inside your own environment, so prompts, keys, and logs never leave your boundary. Data boundaries and responsibilities are fixed in the contract.',
+  },
+];
 ---
 
 <Base route="/en/" theme="dark">
-  <script slot="jsonld" type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
+  <Fragment slot="jsonld">
+    <script type="application/ld+json" set:html={JSON.stringify(softwareApplication)} />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
 
   <section class="landing">
     <div class="landing-fx" aria-hidden="true"></div>
@@ -30,6 +64,7 @@ import RouteCore from '../../components/RouteCore.astro';
       access platform: one OpenAI-compatible API in front of many LLM providers, with smart routing,
       cost and permission governance, and full audit trails — so teams can use multiple models with control.
     </p>
+    <h2>Why do enterprises need an AI gateway?</h2>
     <p>
       Running on multiple models is now the norm: different tasks suit different models, and every provider
       ships its own API, keys, and billing. Integrating each one directly leaves keys scattered, costs without
@@ -37,17 +72,50 @@ import RouteCore from '../../components/RouteCore.astro';
       adds a unified access and governance layer between your applications and the providers, collapsing all of
       that into one controlled egress.
     </p>
+    <h2>What are the three layers of the SMA gateway?</h2>
+    <ul>
+      <li><strong>Smart routing and failover:</strong> dispatches by task profile and live model state (availability, latency, cost), failing over automatically and transparently to the application.</li>
+      <li><strong>Cost and permission governance:</strong> budgets, quotas, and model-access scopes per team, application, and key, with every call metered and reconcilable.</li>
+      <li><strong>Full audit trail:</strong> caller, target model, usage, and timestamp logged for every call — traceable, reconcilable, and usable for compliance review.</li>
+    </ul>
+
+    {modelCount > 0 && (
+      <>
+        <h2>Which models are connected, and what is their measured availability?</h2>
+        <p>
+          As of {report.as_of}, the gateway actively probes {modelCount} connected model x channel entries:
+          {' '}{perfectCount} of them returned 100% probe availability this period, the lowest was {lowest}%, at {sampleText}.
+          Availability here means probe success rate under a 90-second per-call timeout, independent of client-side errors;
+          models below the sample threshold are excluded. The full matrix, methodology, and sample counts are on the
+          {' '}<a href="/en/reports/model-access-benchmark">smaapi Overseas Model Access Index</a> — figures injected by the
+          build pipeline from the gateway export, never hand-filled.
+        </p>
+      </>
+    )}
+
+    <h2>How do you integrate SMA?</h2>
     <p>
-      <strong>Three layers, one platform:</strong> smart routing dispatches by task and live model state
-      (availability, latency, cost) with automatic failover; cost and permission governance sets budgets,
-      quotas, and model-access scopes per team, application, and key, metering every call; the full audit trail
-      logs caller, target model, usage, and timestamp for every call — traceable and reconcilable.
+      Keep your OpenAI SDK, point <code>base_url</code> at the gateway, and use a gateway-issued key; provider
+      keys stay centrally held and never enter application code:
     </p>
+    <pre class="home-code"><code>from openai import OpenAI
+
+client = OpenAI(
+    base_url="https://www.smaapi.com/v1",  # point at the SMA gateway
+    api_key="YOUR_SMA_KEY",                # gateway key; provider keys stay in the gateway
+)</code></pre>
     <p>
       Built for engineering and platform teams that need multiple LLM providers — international and Chinese
-      models alike — with organization-level requirements on cost, permissions, compliance, and audit. Keep your
-      OpenAI SDK and point base_url at the gateway.
+      models alike — with organization-level requirements on cost, permissions, compliance, and audit.
     </p>
+
+    <h2>Frequently asked questions</h2>
+    {qa.map((item) => (
+      <>
+        <h3>{item.q}</h3>
+        <p>{item.a}</p>
+      </>
+    ))}
     <p class="home-more"><a href="/en/sma">See the full product overview: governance, integration, and team →</a></p>
   </article>
 </Base>
@@ -144,6 +212,34 @@ import RouteCore from '../../components/RouteCore.astro';
   }
   .home-brief strong {
     color: #fff;
+  }
+  /* Answer blocks: each h2 opens a self-contained, quotable unit */
+  .home-brief h2 {
+    margin: 2rem 0 0.6rem;
+    font-size: 1.22rem;
+    color: #fff;
+  }
+  .home-brief h3 {
+    margin: 1.3rem 0 0.4rem;
+    font-size: 1rem;
+    color: #ffe6a8;
+  }
+  .home-brief ul {
+    margin: 0.8rem 0;
+    padding-left: 1.2rem;
+  }
+  .home-brief li {
+    margin: 0.5rem 0;
+  }
+  .home-code {
+    margin: 0.9rem 0;
+    padding: 0.9rem 1rem;
+    overflow-x: auto;
+    border: 1px solid rgba(140, 200, 180, 0.18);
+    border-radius: 10px;
+    background: rgba(8, 20, 17, 0.6);
+    font-size: 0.84rem;
+    line-height: 1.6;
   }
   .home-more {
     margin-top: 1.3rem !important;

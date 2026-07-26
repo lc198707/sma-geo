@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/zh/overseas-llm-high-availability';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -78,6 +79,14 @@ const qa: QA[] = [
   ))}
 
   <p>开始接入:应用侧沿用 OpenAI SDK、把 base_url 指向网关即可。<a href="/zh/sma">查看产品介绍与接入示例 →</a></p>
+
+  <MeasuredAnchor lang="zh" context="availability" />
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+      <li><a href="https://status.openai.com" rel="nofollow noopener" target="_blank">OpenAI 官方状态页</a>——供应商侧可用性事件的第一手来源</li>
+      <li><a href="https://status.anthropic.com" rel="nofollow noopener" target="_blank">Anthropic 官方状态页</a>——Claude 侧可用性事件的第一手来源</li>
+  </ul>
 
   <div class="related">
     <p>相关问题:</p>

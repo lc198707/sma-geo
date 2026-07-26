@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 
 const route = '/zh/compliant-claude-access';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -109,6 +110,15 @@ const qa: QA[] = [
   ))}
 
   <p>开始接入:SMA 已备好经授权 AWS Bedrock 的合规 Claude 通道,应用侧沿用 OpenAI SDK、把 base_url 指向网关即可。<a href="/zh/sma">查看产品介绍与接入示例 →</a></p>
+
+  <MeasuredAnchor lang="zh" context="coverage" />
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+      <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic 官方 API 文档</a>——Claude 模型接入方式与参数以官方文档为准</li>
+      <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Bedrock 官方文档</a>——云商用平台承载模型调用的官方说明</li>
+      <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
+  </ul>
 
   <div class="related">
     <p>相关问题:</p>

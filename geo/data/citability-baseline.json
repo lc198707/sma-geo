@@ -1,0 +1,30 @@
+{
+  "today": "2026-07-25",
+  "average": 64.3,
+  "scores": {
+    "/en/faq": 46,
+    "/en/llm-cost-governance": 48,
+    "/en/compare/api-relay-alternative": 51,
+    "/en": 53,
+    "/en/overseas-llm-high-availability": 53,
+    "/en/reports/model-access-benchmark": 53,
+    "/zh/reports/model-access-benchmark": 54,
+    "/en/compliant-overseas-llm-access": 56,
+    "/en/compare/llm-gateway-comparison": 58,
+    "/en/sma": 60,
+    "/zh/faq": 60,
+    "/en/compliant-claude-access": 62,
+    "/en/compare/sma-vs-oneapi": 63,
+    "/zh/llm-cost-governance": 64,
+    "/": 65,
+    "/en/what-is-llm-gateway": 69,
+    "/zh/compare/api-relay-alternative": 69,
+    "/zh/compare/llm-gateway-comparison": 71,
+    "/zh/compliant-overseas-llm-access": 71,
+    "/zh/overseas-llm-high-availability": 77,
+    "/zh/sma": 84,
+    "/zh/compare/sma-vs-oneapi": 85,
+    "/zh/compliant-claude-access": 85,
+    "/zh/what-is-llm-gateway": 87
+  }
+}
