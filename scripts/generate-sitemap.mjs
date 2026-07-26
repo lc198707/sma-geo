@@ -31,4 +31,18 @@ ${urls}
 `;
 
 writeFileSync(resolve(root, 'dist/sitemap.xml'), xml);
-console.log(`sitemap.xml generated: ${pages.length} urls`);
+
+// sitemap 索引:部分 AI 爬虫(实测 DeepSeekBot 2026-06-18)会主动探测 /sitemap-index.xml,
+// 缺失即 404。站点只有一张 sitemap,索引仅指向它——成本近零,少一次无谓的 404。
+const latest = pages.map((p) => p.dateModified).filter(Boolean).sort().at(-1);
+const indexXml = `<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>${site}/sitemap.xml</loc>${latest ? `
+    <lastmod>${latest}</lastmod>` : ''}
+  </sitemap>
+</sitemapindex>
+`;
+writeFileSync(resolve(root, 'dist/sitemap-index.xml'), indexXml);
+
+console.log(`sitemap.xml generated: ${pages.length} urls (+ sitemap-index.xml)`);

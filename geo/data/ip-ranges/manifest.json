@@ -3,30 +3,60 @@
     "file": "GPTBot.json",
     "source": "https://openai.com/gptbot.json",
     "prefixCount": 21,
-    "fetched": "2026-06-10"
+    "fetched": "2026-07-25"
   },
   "OAI-SearchBot": {
     "file": "OAI-SearchBot.json",
     "source": "https://openai.com/searchbot.json",
     "prefixCount": 35,
-    "fetched": "2026-06-10"
+    "fetched": "2026-07-25"
   },
   "ChatGPT-User": {
     "file": "ChatGPT-User.json",
     "source": "https://openai.com/chatgpt-user.json",
-    "prefixCount": 253,
-    "fetched": "2026-06-10"
+    "prefixCount": 286,
+    "fetched": "2026-07-25"
   },
   "PerplexityBot": {
     "file": "PerplexityBot.json",
     "source": "https://www.perplexity.ai/perplexitybot.json",
     "prefixCount": 8,
-    "fetched": "2026-06-10"
+    "fetched": "2026-07-25"
   },
   "Perplexity-User": {
     "file": "Perplexity-User.json",
     "source": "https://www.perplexity.ai/perplexity-user.json",
     "prefixCount": 4,
-    "fetched": "2026-06-10"
+    "fetched": "2026-07-25"
+  },
+  "ClaudeBot": {
+    "file": "ClaudeBot.json",
+    "source": "https://claude.com/crawling/bots.json",
+    "prefixCount": 20,
+    "fetched": "2026-07-25"
+  },
+  "Claude-User": {
+    "file": "Claude-User.json",
+    "source": "https://claude.com/crawling/bots.json",
+    "prefixCount": 20,
+    "fetched": "2026-07-25"
+  },
+  "Claude-SearchBot": {
+    "file": "Claude-SearchBot.json",
+    "source": "https://claude.com/crawling/bots.json",
+    "prefixCount": 20,
+    "fetched": "2026-07-25"
+  },
+  "Google-Extended": {
+    "file": "Google-Extended.json",
+    "source": "https://developers.google.com/static/search/apis/ipranges/special-crawlers.json",
+    "prefixCount": 270,
+    "fetched": "2026-07-25"
+  },
+  "GoogleOther": {
+    "file": "GoogleOther.json",
+    "source": "https://developers.google.com/static/search/apis/ipranges/special-crawlers.json",
+    "prefixCount": 270,
+    "fetched": "2026-07-25"
   }
 }

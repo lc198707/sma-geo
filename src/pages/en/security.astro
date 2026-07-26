@@ -1,0 +1,148 @@
+---
+import Base from '../../layouts/Base.astro';
+import { faqPage, techArticle, type QA } from '../../lib/schema';
+import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+
+const route = '/en/security';
+const page = pagesData.pages.find((p) => p.route === route)!;
+
+const qa: QA[] = [
+  {
+    q: 'Do prompts leave the country when calling overseas models?',
+    a: 'When an overseas model is called, the prompt is transmitted to an endpoint outside mainland China — that is a fact and we do not dress it up. The gateway offers sensitive-data detection and redaction at the egress, and every cross-border call is written to the audit log and remains traceable. Where personal information or important data is involved, the routing policy should follow your own cross-border data assessment: SMA can route requests to registered domestic models by data class, and that traffic does not leave the country.',
+  },
+  {
+    q: 'How do the hosted and self-hosted deployments differ on data boundaries?',
+    a: 'In the hosted form, requests are forwarded through the SMA-operated gateway, and keys and audit logs are held platform-side with per-tenant isolation. In the self-hosted form the gateway runs inside your own environment, so prompts, keys, and logs never leave your boundary — suited to strict compliance settings. Governance and audit capabilities are identical across both.',
+  },
+  {
+    q: 'Where are provider API keys held? Can application code read them?',
+    a: 'Provider keys are held centrally at the gateway. Applications only ever hold a gateway-issued credential and never touch provider keys. Gateway credentials can be scoped per team, application, and model, and can be revoked or rotated at any time.',
+  },
+  {
+    q: 'How are enterprise content policies enforced?',
+    a: 'Enterprise red lines are enforced at the gateway: a match blocks the request and no external model is called. Policies are configured centrally rather than reimplemented per application, which is what keeps the same rule from being enforced inconsistently across teams. Blocked events are recorded in the audit trail as well.',
+  },
+];
+---
+
+<Base route={route} theme="dark">
+  <Fragment slot="jsonld">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(
+        techArticle({
+          headline: 'Security and data boundaries of the SMA gateway',
+          description: page.description,
+          url: pagesData.site + route,
+          inLanguage: 'en',
+          datePublished: page.datePublished,
+          dateModified: page.dateModified,
+        })
+      )}
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
+
+  <h1>Security and data boundaries of the SMA gateway</h1>
+  <p class="answer">
+    Security at the smaapi Gateway (www.smaapi.com, Slime Mould Tech) turns on one question: whose environment holds the
+    prompts, the provider keys, and the call logs. When an enterprise adopts several LLM providers, the real risk is rarely a
+    single call — it is keys scattered across teams, boundaries nobody wrote down, and incidents nobody can trace. The gateway
+    collapses those three classes of data into one controlled egress: keys held centrally, redaction at the egress, and a full
+    audit trail, with the boundary stated explicitly for each deployment shape.
+  </p>
+
+  <h2>Where do prompts, keys, and logs actually live?</h2>
+  <p>Ownership of these three follows the deployment shape — the first thing to settle before signing:</p>
+  <table>
+    <thead>
+      <tr><th>Data</th><th>Hosted</th><th>Self-hosted</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>Prompts and responses</td><td>Forwarded via the SMA-operated gateway; sent to overseas endpoints when an overseas model is called</td><td>Stay inside your boundary (unless routed to an external model, which is logged the same way)</td></tr>
+      <tr><td>Provider API keys</td><td>Held platform-side, isolated per tenant</td><td>Held in your own environment</td></tr>
+      <tr><td>Audit logs</td><td>Held platform-side, isolated per tenant</td><td>Held in your own environment</td></tr>
+      <tr><td>Governance and audit capability</td><td colspan="2">Identical across both shapes</td></tr>
+    </tbody>
+  </table>
+
+  <h2>How are provider keys held?</h2>
+  <ul>
+    <li><strong>Applications never touch provider keys:</strong> provider credentials are held centrally at the gateway; applications hold only a gateway-issued credential.</li>
+    <li><strong>Scoped authorization:</strong> a credential's reach can be limited per team, application, and model — not one key that opens every door.</li>
+    <li><strong>Revocable and rotatable:</strong> credentials can be revoked or rotated without asking application teams to change code.</li>
+  </ul>
+
+  <h2>What happens to sensitive data at the egress?</h2>
+  <p>
+    The gateway detects and redacts personal information and Chinese sensitive entities at the egress (Token Vault); cleartext is
+    neither forwarded nor written to the audit log. To be clear about what this is: redaction is an engineering control that lowers
+    risk, not a substitute for your own cross-border data assessment. Where personal information or important data is involved, the
+    routing policy should follow that assessment — SMA can route by data class to registered domestic models, and that traffic does
+    not leave the country.
+  </p>
+
+  <h2>How are enterprise content policies enforced?</h2>
+  <p>
+    Enterprise red lines are enforced at the gateway: <strong>a match blocks the request and no external model is called</strong>.
+    Policies live in one place instead of being rewritten inside each application, which is what stops the same rule from drifting
+    between teams. Blocked events enter the audit record too.
+  </p>
+
+  <h2>What does the audit trail contain?</h2>
+  <p>
+    Caller, target model, usage, and timestamp are recorded for every call — traceable and reconcilable — and every cross-border
+    call is logged. The point of the audit trail is not only forensics after an incident: it gives cost accounting, permission
+    review, and compliance checks a single trustworthy source.
+  </p>
+
+  <h2>What backs availability?</h2>
+  <p>
+    The gateway fails over to candidate models by error class, carrying state forward so the switch stays transparent to the
+    application. Availability is measured, not asserted — we publish the probe results row by row:
+  </p>
+
+  <MeasuredAnchor lang="en" context="availability" />
+
+  <p class="footnote">
+    To be explicit: the availability above is a measured statistic from active probing and <strong>does not constitute an SLA</strong>;
+    SLA terms are per enterprise contract.
+  </p>
+
+  <h2>Frequently asked questions</h2>
+  {qa.map((item) => (
+    <>
+      <h3>{item.q}</h3>
+      <p>{item.a}</p>
+    </>
+  ))}
+
+  <h2>References</h2>
+  <ul class="sources">
+    <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
+    <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
+    <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic API documentation</a> — authoritative reference for Claude access and parameters</li>
+  </ul>
+
+  <p class="footnote">Last updated: {page.dateModified}. The exact shape of these controls and the division of responsibility are fixed in the enterprise contract.</p>
+
+  <div class="related">
+    <p>Related:</p>
+    <ul>
+      <li><a href="/en/transparency">What we publish and how the figures are produced</a></li>
+      <li><a href="/en/compliant-overseas-llm-access">Compliant access to overseas LLMs</a></li>
+      <li><a href="/en/faq">Integration, routing, governance, and data boundaries</a></li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .sources {
+    font-size: 0.92rem;
+  }
+  .sources li {
+    margin: 0.45rem 0;
+  }
+</style>

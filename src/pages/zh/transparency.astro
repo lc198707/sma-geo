@@ -1,0 +1,159 @@
+---
+import Base from '../../layouts/Base.astro';
+import { faqPage, techArticle, type QA } from '../../lib/schema';
+import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import report from '../../data/geo-report.generated.json';
+
+const route = '/zh/transparency';
+const page = pagesData.pages.find((p) => p.route === route)!;
+
+// 页面自述的口径全部从构建产物取,不手写:说了「不手填」就不能在这页手填。
+const published = report.published === true;
+const rowCount = published ? report.rows.length : 0;
+const threshold = report.thresholdSampleCount;
+
+const qa: QA[] = [
+  {
+    q: '你们公布的可用率能当 SLA 用吗?',
+    a: '不能。公布的可用率是主动探活的测量统计,反映探针视角下的连通情况,不构成服务等级承诺。SLA 条款以企业合同约定为准。我们把测量口径、样本量与统计时点一并公开,正是为了让读者能自行判断这些数字的适用范围。',
+  },
+  {
+    q: '为什么有些指标是留白的?',
+    a: '因为还没有可发布的真实测量。延迟分位数(P50/P95)需要网关记录每次请求的延迟,当前探针只有均值,把均值当作 P50/P95 是不成立的,所以留白。我们的规则是:缺项留白,不用估算值或行业经验值填充。',
+  },
+  {
+    q: '页面上的数字会不会是手工填上去的?',
+    a: '不会。数据页与各页引用的实测数字都由构建管道从网关导出文件注入,任何一个数都能回溯到导出文件的对应行。导出侧还有 fail-closed 门控:样本量不达阈值、缺主指标、字段类型不合法的行一律丢弃,全部不达标则整页不发布。',
+  },
+  {
+    q: '你们和模型厂商是什么关系?',
+    a: '我们是模型能力的接入与治理方,不是模型厂商。页面中出现的厂商与模型名称属于指明性使用,用于说明接入对象,不表示对方对本平台的认可或与本平台存在官方合作关系。具体渠道与授权状态以站内对应页面与合同约定为准。',
+  },
+];
+---
+
+<Base route={route} theme="dark">
+  <Fragment slot="jsonld">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(
+        techArticle({
+          headline: 'SMA 网关透明度声明:我们公布什么、数字怎么产生',
+          description: page.description,
+          url: pagesData.site + route,
+          inLanguage: 'zh-CN',
+          datePublished: page.datePublished,
+          dateModified: page.dateModified,
+        })
+      )}
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
+
+  <h1>透明度声明:我们公布什么、数字怎么产生</h1>
+  <p class="answer">
+    这是 SMA 网关(www.smaapi.com,均路科技)对外披露口径的说明:我们公布哪些数据、这些数字如何产生、
+    哪些事情我们明确不承诺。企业选型时最难核实的往往不是功能列表,而是"这些数字可不可信"。
+    我们的做法是把测量口径、样本量、统计时点与生成方式一并公开,让读者能自己判断,而不是只看结论。
+  </p>
+
+  <h2>我们公布哪些数据?</h2>
+  <p>
+    当前对外公布的实测数据是<strong>模型接入指数</strong>:当前真实连通的模型 × 接入通道的探活可用率与样本量,
+    逐行列出,含统计时点。{published && `本期共 ${rowCount} 行。`}
+  </p>
+
+  <MeasuredAnchor lang="zh" context="coverage" />
+
+  <h2>这些数字是怎么产生的?</h2>
+  <ol>
+    <li><strong>测量:</strong>生产网关对每个已连通模型 × 每个任务域发送短探针,记录调用是否成功与耗时。</li>
+    <li><strong>导出:</strong>探活结果按探活轮数加权汇总为单模型可用率,经脱敏标签转为公开口径后导出。</li>
+    <li><strong>门控:</strong>单模型样本量低于 {threshold} 次不进主表;缺主指标、字段类型不合法的行判为非法丢弃;若全部不达标,整页按占位处理、不发布任何数字。</li>
+    <li><strong>注入:</strong>页面由构建管道生成,数字来自导出文件的对应行,不经人工誊写。</li>
+  </ol>
+  <p>
+    这条链路的设计目标只有一个:<strong>让任何一个对外数字都能回溯到一次真实测量</strong>。
+    如果测量没做、或样本不足,结果是页面留白,而不是换一个说法把话说圆。
+  </p>
+
+  <h2>我们明确不承诺什么?</h2>
+  <ul>
+    <li><strong>可用率不是 SLA。</strong>公布的可用率是探针视角的测量统计,服务等级承诺以合同约定为准。</li>
+    <li><strong>不做绝对化承诺。</strong>对服务连续性、账号状态一类事项,我们不给无条件保证——这类承诺无法被任何一方兑现,写进材料只会在真出问题时反噬。</li>
+    <li><strong>不宣称官方合作关系。</strong>厂商与模型名称属指明性使用,渠道与授权状态以站内对应页面与合同为准。</li>
+    <li><strong>不替代企业自身的合规评估。</strong>数据出境评估、算法备案等义务由服务提供者依法承担,网关提供的是技术手段。</li>
+  </ul>
+
+  <h2>本平台适用什么监管口径?</h2>
+  <p>
+    《生成式人工智能服务管理暂行办法》第二条对适用范围作了明确区分。其第三款逐字表述为:
+  </p>
+  <blockquote>
+    "行业组织、企业、教育和科研机构、公共文化机构、有关专业机构等研发、应用生成式人工智能技术，未向境内公众提供生成式人工智能服务的，不适用本办法的规定。"
+    <footer>——《生成式人工智能服务管理暂行办法》第二条第三款,来源:<a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">国家互联网信息办公室</a></footer>
+  </blockquote>
+  <p>
+    这条区分是企业内部使用场景与面向公众服务场景分野的依据:企业把大模型用于内部生产经营,与向境内公众提供生成式 AI 服务,
+    是两套不同的监管口径。SMA 支持按场景把面向公众的流量路由到境内已备案模型,海外模型用于企业内部场景。
+    具体到某个业务是否属于"向境内公众提供服务",应由企业结合自身情况与法律意见判断,我们不代为定性。
+  </p>
+
+  <h2>发现问题怎么反馈?</h2>
+  <p>
+    若发现本站任何数字与实际不符、或表述存在误导,欢迎指出——涉及对外数字的更正会连同口径说明一并发布。
+    本站页面均标注最后更新时间,数据页标注统计时点,便于核对时效。
+  </p>
+
+  <h2>常见问题</h2>
+  {qa.map((item) => (
+    <>
+      <h3>{item.q}</h3>
+      <p>{item.a}</p>
+    </>
+  ))}
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+    <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——适用范围与合规义务的一手依据</li>
+    <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic 官方 API 文档</a>——Claude 接入方式以官方文档为准</li>
+    <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Bedrock 官方文档</a>——云商用平台承载模型调用的官方说明</li>
+  </ul>
+
+  <p class="footnote">
+    商标声明:Claude 为 Anthropic、AWS 与 Amazon Bedrock 为 Amazon、Vertex AI 为 Google 的商标;
+    本页仅作指明性使用,不表示上述厂商对本平台的认可或与本平台存在官方合作关系。本页最后更新:{page.dateModified}。
+  </p>
+
+  <div class="related">
+    <p>相关问题:</p>
+    <ul>
+      <li><a href="/zh/security">提示词、密钥与日志保存在哪里(安全与数据边界)</a></li>
+      <li><a href="/zh/reports/model-access-benchmark">模型接入指数:逐行实测数据与统计口径</a></li>
+      <li><a href="/zh/compliant-overseas-llm-access">如何合规接入海外大模型</a></li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  blockquote {
+    margin: 1.1rem 0;
+    padding: 0.9rem 1.2rem;
+    border-left: 3px solid rgba(140, 200, 180, 0.5);
+    border-radius: 0 10px 10px 0;
+    background: rgba(34, 110, 96, 0.1);
+    line-height: 1.85;
+  }
+  blockquote footer {
+    margin-top: 0.6rem;
+    font-size: 0.86rem;
+    color: #93bdab;
+  }
+  .sources {
+    font-size: 0.92rem;
+  }
+  .sources li {
+    margin: 0.45rem 0;
+  }
+</style>

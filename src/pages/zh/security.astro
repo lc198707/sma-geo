@@ -1,0 +1,143 @@
+---
+import Base from '../../layouts/Base.astro';
+import { faqPage, techArticle, type QA } from '../../lib/schema';
+import pagesData from '../../data/pages.json';
+import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+
+const route = '/zh/security';
+const page = pagesData.pages.find((p) => p.route === route)!;
+
+const qa: QA[] = [
+  {
+    q: '提示词会传输到境外吗?',
+    a: '调用境外模型时,提示词会传输至境外端点——这是事实,我们不回避。网关在出口提供敏感信息识别与脱敏能力,出境调用全部进入审计日志、可追溯。涉及个人信息或重要数据的场景,应结合企业自身的数据出境评估确定路由策略:SMA 支持按数据等级把请求路由到境内备案模型,该部分数据不出境。',
+  },
+  {
+    q: '云端形态与自部署形态的数据边界有什么不同?',
+    a: '云端形态中,请求经由 SMA 托管的网关转发,密钥与审计日志保存在平台侧并按企业隔离;自部署形态把网关运行在企业自己的环境内,提示词、密钥与日志不出企业边界,适合合规要求严格的场景。两种形态的治理与审计能力保持一致。',
+  },
+  {
+    q: '模型厂商的密钥保存在哪里?业务代码能拿到吗?',
+    a: '模型厂商密钥集中托管在网关侧,业务侧只持有网关签发的凭证,不接触厂商密钥。网关凭证可按团队、应用、模型范围细粒度授权,并可随时回收与轮换。',
+  },
+  {
+    q: '企业的内容红线怎么执行?',
+    a: '企业红线在网关侧统一执行,命中即阻断、不调用外部模型。策略集中配置,不依赖各业务方自行实现,避免同一条红线在不同应用里执行口径不一致。',
+  },
+];
+
+const updated = page.dateModified;
+---
+
+<Base route={route} theme="dark">
+  <Fragment slot="jsonld">
+    <script
+      type="application/ld+json"
+      set:html={JSON.stringify(
+        techArticle({
+          headline: 'SMA 网关的安全与数据边界',
+          description: page.description,
+          url: pagesData.site + route,
+          inLanguage: 'zh-CN',
+          datePublished: page.datePublished,
+          dateModified: page.dateModified,
+        })
+      )}
+    />
+    <script type="application/ld+json" set:html={JSON.stringify(faqPage(qa))} />
+  </Fragment>
+
+  <h1>SMA 网关的安全与数据边界</h1>
+  <p class="answer">
+    SMA 网关(www.smaapi.com,均路科技)的安全设计围绕一个问题展开:提示词、模型厂商密钥与调用日志分别保存在谁的环境里。
+    企业接入多家大模型时,真正的风险不在单次调用,而在密钥散落、边界不清、出了事查不到人。网关把这三类数据收敛到一个可控出口:
+    密钥集中托管、出口侧脱敏、全链路留痕,并按云端与自部署两种形态明确划定边界。
+  </p>
+
+  <h2>提示词、密钥与日志分别存在哪里?</h2>
+  <p>这三类数据的归属由部署形态决定,是签约前必须确认的第一件事:</p>
+  <table>
+    <thead>
+      <tr><th>数据类型</th><th>云端形态</th><th>自部署形态</th></tr>
+    </thead>
+    <tbody>
+      <tr><td>提示词与响应</td><td>经 SMA 托管网关转发;调用境外模型时传输至境外端点</td><td>不出企业边界(除非路由到外部模型,该次调用同样如实留痕)</td></tr>
+      <tr><td>模型厂商密钥</td><td>集中托管于平台侧,按企业隔离</td><td>保存在企业自有环境</td></tr>
+      <tr><td>审计日志</td><td>保存在平台侧,按企业隔离</td><td>保存在企业自有环境</td></tr>
+      <tr><td>治理与审计能力</td><td colspan="2">两种形态保持一致</td></tr>
+    </tbody>
+  </table>
+
+  <h2>模型厂商密钥如何托管?</h2>
+  <ul>
+    <li><strong>业务侧不接触厂商密钥:</strong>各供应商密钥集中托管在网关,业务应用只持有网关签发的凭证。</li>
+    <li><strong>细粒度授权:</strong>凭证的访问范围可细到团队、应用与模型,不是一把钥匙开所有门。</li>
+    <li><strong>可回收可轮换:</strong>凭证随时可回收与轮换,不需要业务方配合改代码。</li>
+  </ul>
+
+  <h2>敏感数据在出口侧如何处理?</h2>
+  <p>
+    网关在出口侧对个人信息与中文敏感实体做识别与脱敏(Token Vault),明文不外发、不进审计日志。
+    需要强调的是:脱敏是降低风险的工程手段,不替代企业自身的数据出境评估。涉及个人信息或重要数据的场景,
+    应结合评估结论确定路由策略——SMA 支持按数据等级把请求路由到境内备案模型,该部分数据不出境。
+  </p>
+
+  <h2>企业内容红线如何统一执行?</h2>
+  <p>
+    企业红线在网关侧统一执行,<strong>命中即阻断、不调用外部模型</strong>。策略集中配置,
+    避免同一条红线在不同应用里各写一遍、执行口径不一致。阻断事件同样进入审计记录。
+  </p>
+
+  <h2>审计记录包含什么?</h2>
+  <p>
+    每次调用的调用方、目标模型、用量与时间完整留痕,可追溯、可对账;出境调用全部进入审计日志。
+    审计的目的不只是"出事能查",更是让成本核算、权限复核与合规审查有同一份可信底稿。
+  </p>
+
+  <h2>可用性由什么保障?</h2>
+  <p>
+    按错误类型自动切换到候选模型,以状态续接保留上下文,切换对应用透明。
+    可用性是实测出来的,不是承诺出来的——我们把探活实测数据逐行公开:
+  </p>
+
+  <MeasuredAnchor lang="zh" context="availability" />
+
+  <p class="footnote">
+    需要说明:上述可用率是主动探活的测量统计,<strong>不构成 SLA</strong>;SLA 条款以企业合同约定为准。
+  </p>
+
+  <h2>常见问题</h2>
+  {qa.map((item) => (
+    <>
+      <h3>{item.q}</h3>
+      <p>{item.a}</p>
+    </>
+  ))}
+
+  <h2>参考来源</h2>
+  <ul class="sources">
+    <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
+    <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
+    <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic 官方 API 文档</a>——Claude 模型接入方式与参数以官方文档为准</li>
+  </ul>
+
+  <p class="footnote">本页最后更新:{updated}。安全能力的具体形态与责任划分以企业合同约定为准。</p>
+
+  <div class="related">
+    <p>相关问题:</p>
+    <ul>
+      <li><a href="/zh/transparency">我们公布什么数据、怎么产生的(透明度声明)</a></li>
+      <li><a href="/zh/compliant-overseas-llm-access">如何合规接入海外大模型</a></li>
+      <li><a href="/zh/faq">接入、路由、治理与数据边界的常见问题</a></li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .sources {
+    font-size: 0.92rem;
+  }
+  .sources li {
+    margin: 0.45rem 0;
+  }
+</style>

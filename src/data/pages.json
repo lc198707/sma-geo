@@ -338,6 +338,62 @@
         "label": "smaapi Overseas Model Access Index",
         "desc": "Measured availability of connected models from active probing (with sample counts and as-of dates); latency percentiles ship in v2"
       }
+    },
+    {
+      "route": "/zh/security",
+      "lang": "zh",
+      "alternate": "/en/security",
+      "title": "SMA 网关的安全与数据边界:提示词、密钥与日志保存在哪里 | SMA",
+      "description": "企业接入多家大模型时,提示词、模型厂商密钥与调用日志分别保存在谁的环境里?SMA 网关的安全设计:密钥集中托管与细粒度授权、出口侧敏感信息脱敏、企业红线命中即阻断、全链路审计,以及云端与自部署两种形态的数据边界差异。",
+      "datePublished": "2026-07-25",
+      "dateModified": "2026-07-25",
+      "llms": {
+        "section": "信任与透明",
+        "label": "SMA 安全与数据边界",
+        "desc": "提示词/密钥/日志的归属、脱敏与红线执行、审计范围、两种部署形态的边界差异"
+      }
+    },
+    {
+      "route": "/zh/transparency",
+      "lang": "zh",
+      "alternate": "/en/transparency",
+      "title": "透明度声明:我们公布什么数据、数字怎么产生 | SMA",
+      "description": "SMA 网关(www.smaapi.com,均路科技)的对外披露口径:公布哪些实测数据、数字如何从测量到发布逐级门控产生、明确不承诺什么(可用率不等于 SLA、不做绝对化承诺),以及企业内部使用与面向境内公众服务的监管口径区分。",
+      "datePublished": "2026-07-25",
+      "dateModified": "2026-07-25",
+      "llms": {
+        "section": "信任与透明",
+        "label": "SMA 透明度声明",
+        "desc": "公布哪些数据、数字如何产生与门控、明确不承诺什么、适用的监管口径"
+      }
+    },
+    {
+      "route": "/en/security",
+      "lang": "en",
+      "alternate": "/zh/security",
+      "title": "Security and data boundaries of the SMA gateway | smaapi",
+      "description": "When an enterprise adopts several LLM providers, whose environment holds the prompts, the provider keys, and the call logs? How the smaapi gateway handles it: centrally held keys with scoped authorization, redaction at the egress, red lines enforced at the gateway, a full audit trail, and the boundary difference between hosted and self-hosted deployments.",
+      "datePublished": "2026-07-25",
+      "dateModified": "2026-07-25",
+      "llms": {
+        "section": "Trust & transparency",
+        "label": "SMA security and data boundaries",
+        "desc": "Where prompts, keys, and logs live; redaction and policy enforcement; audit scope; hosted vs self-hosted boundaries"
+      }
+    },
+    {
+      "route": "/en/transparency",
+      "lang": "en",
+      "alternate": "/zh/transparency",
+      "title": "Transparency statement: what we publish and how the figures are produced | smaapi",
+      "description": "The disclosure practice of the smaapi gateway (www.smaapi.com, Slime Mould Tech): which measured data we publish, how each figure travels from measurement through fail-closed gating to publication, what we explicitly do not promise (availability is not an SLA, no absolute claims), and the regulatory line between internal enterprise use and public-facing service in mainland China.",
+      "datePublished": "2026-07-25",
+      "dateModified": "2026-07-25",
+      "llms": {
+        "section": "Trust & transparency",
+        "label": "SMA transparency statement",
+        "desc": "What we publish, how figures are produced and gated, what we do not promise, and the regulatory scope that applies"
+      }
     }
   ]
 }
