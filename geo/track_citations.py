@@ -63,6 +63,27 @@ QUALITY_PROMPT = (
 )
 
 
+def _save_answer(rec, answer):
+    """把完整答案落到 geo/data/answers/<date>.jsonl,供后续反推引擎偏好。
+
+    动机(2026-07-26):CSV 只在命中时留 120 字片段,未命中行没有任何答案文本,
+    因此无法回答「引擎到底偏好什么内容形态」——AutoGEO 类规则抽取缺原料。
+    答案全文体量大且含引擎措辞,不进 CSV、不入库(geo/data/answers/ 已 gitignore),
+    只作为本地分析原料;攒够几轮后可做偏好抽取。
+    路径由 CSV_PATH 派生:测试替换 CSV_PATH 时自动跟随,不会写进真实数据目录。
+    """
+    out_dir = CSV_PATH.parent / "answers"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    line = {
+        "run_id": rec["run_id"], "date": rec["date"], "engine": rec["engine"], "mode": rec["mode"],
+        "query_id": rec["query_id"], "query_intent": rec["query_intent"], "query_weight": rec["query_weight"],
+        "mentioned": rec["mentioned"], "cited": rec["cited_smaapi"], "recommended": rec["recommended"],
+        "answer_hash": rec["answer_hash"], "answer": answer,
+    }
+    with (out_dir / f"{rec['date']}.jsonl").open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(line, ensure_ascii=False) + "\n")
+
+
 def detect_mislabel(text):
     return any(rx.search(text) for rx in MISLABEL_RES)
 
@@ -135,7 +156,7 @@ def ask_openai_compatible(engine, query, mode_params):
     return data["choices"][0]["message"]["content"], [u for u in urls if u]
 
 
-def run_queries(queries, engines, ask_fn=ask_openai_compatible, today=None, classify_fn=classify_quality, run_id=None):
+def run_queries(queries, engines, ask_fn=ask_openai_compatible, today=None, classify_fn=classify_quality, run_id=None, save_answers=True):
     """对每个 api 引擎 × query × 支持的模式各跑一次,返回结果行列表(schema v3)。
 
     三层口径(r8):mention(回答提及) ⊂ cited(来源引用含我方 www 主机) / recommended(推荐语境)。
@@ -175,6 +196,11 @@ def run_queries(queries, engines, ask_fn=ask_openai_compatible, today=None, clas
                             mislabel=int(mentioned and detect_mislabel(answer)),
                             entity_mismatch=mismatch,
                             answer_hash=hashlib.sha256(answer.encode()).hexdigest()[:12])
+                if save_answers:
+                    try:
+                        _save_answer(base, answer)
+                    except Exception as exc:  # 落盘失败不影响主测量
+                        print(f"  ! 答案落盘失败 {q['id']}: {exc}", file=sys.stderr)
                 rows.append(base)
     return rows
 

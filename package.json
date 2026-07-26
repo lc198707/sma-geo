@@ -6,7 +6,7 @@
   "description": "SMA enterprise AI gateway content site (GEO)",
   "scripts": {
     "dev": "astro dev",
-    "build": "node scripts/build-geo-report.mjs && astro build && node scripts/generate-robots.mjs && node scripts/generate-llms.mjs && node scripts/generate-sitemap.mjs",
+    "build": "node scripts/build-geo-report.mjs && astro build && node scripts/generate-robots.mjs && node scripts/generate-llms.mjs && node scripts/generate-sitemap.mjs && node scripts/generate-md-mirror.mjs && node scripts/generate-data-endpoints.mjs",
     "preview": "astro preview",
     "test": "node tests/validate-lockfile.mjs && node tests/validate-robots-txt.mjs && node tests/validate-llms-txt.mjs && node tests/validate-indexnow-gate.mjs && node tests/validate-baidu-gate.mjs && node tests/validate-single-host.mjs && node tests/validate-links-schema.mjs && node tests/validate-geo-report-gate.mjs && node scripts/audit-citability.mjs --baseline geo/data/citability-baseline.json && node scripts/check-terminology.mjs && python3 tests/test_parse_crawlers.py && python3 tests/test_track_citations.py && python3 tests/test_export_gateway_metrics.py",
     "update:robots-data": "node scripts/update-robots-data.mjs",
