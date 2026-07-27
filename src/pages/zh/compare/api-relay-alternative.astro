@@ -34,7 +34,7 @@ const qa: QA[] = [
     个人账号池或来源不明转售类的 API 中转,常见风险是封号中断、无明确合同主体难追责、开不了合规发票、调用无法审计。企业级网关则以正规渠道(云服务商商用平台)接入、签约主体明确、可开技术服务发票、全链路可审计。因双方同为 OpenAI 兼容协议,迁移通常只改 base_url 与密钥,业务代码不动。
   </p>
 
-  <h2>账号池 / 转售类中转的四个风险</h2>
+  <h2>账号池 / 转售类中转有哪些风险?</h2>
   <ul>
     <li><strong>封号与中断:</strong>上游常是共享账号或灰产来源,被风控封禁时整批密钥可能一起失效,服务随之中断。</li>
     <li><strong>无主体、难追责:</strong>没有明确签约主体,出了问题找不到人、对不上账,尽调与安全评审过不去。</li>
@@ -42,7 +42,18 @@ const qa: QA[] = [
     <li><strong>调用无法审计:</strong>没有完整调用日志,合规审查缺证据链,数据边界也说不清。</li>
   </ul>
 
-  <h2>企业级网关怎么补齐这四点</h2>
+  <p>
+    还有一条常被拿来对比的路是自己搭一套开源转发。这条路同样要先看责任落在谁身上——OneAPI 在自己的说明文件里写得很直白:
+  </p>
+  <blockquote>
+    <p>「According to the MIT license, users should bear the risk and responsibility of using this project, and the developer of this open-source project is not responsible for this.」</p>
+    <cite>来源:<a href="https://github.com/songquanpeng/one-api" rel="nofollow noopener" target="_blank">One API 项目说明(README)</a>(核对日期 2026-07)</cite>
+  </blockquote>
+  <p>
+    这不是说开源方案不好——它开源、免费、可自控,该被认真考虑。要点在于:买转售额度也好、自建开源转发也好,风险与责任最终都由使用方自己承担;而企业采购真正要买的,往往正是"有一个能把责任写进合同的对手方"。这是形态差别,不是优劣之分。
+  </p>
+
+  <h2>企业级网关如何补齐这四点?</h2>
   <p>
     以 SMA 为例,正规渠道接入解决的正是上面四点:海外模型经云服务商商用平台接入(其中 GPT 系底层基于 Microsoft Azure 商用服务),签约主体与责任归属写进合同;支持对公签约与技术服务发票,在线支付宝或对公充值;每次调用全程审计、可追溯可对账;多模型互为备份,故障时自动切换并以状态续接保留上下文,降低单点中断。需要协助还有企业微信 7×24 技术支持。
   </p>

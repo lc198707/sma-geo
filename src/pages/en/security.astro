@@ -67,6 +67,17 @@ const qa: QA[] = [
       <tr><td>Governance and audit capability</td><td colspan="2">Identical across both shapes</td></tr>
     </tbody>
   </table>
+  <p>
+    One layer further upstream sits the model-side boundary, and that one is defined by the cloud platform itself. Amazon Bedrock — the commercial platform through which SMA reaches Claude — documents it this way:
+  </p>
+  <blockquote>
+    <p>"Because the model providers don't have access to those accounts, they don't have access to Amazon Bedrock logs or to customer prompts and completions."</p>
+    <p>"We strongly recommend that you never put confidential or sensitive information, such as your customers' email addresses, into tags or free-form text fields such as a Name field."</p>
+    <cite>Source: <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html" rel="nofollow noopener" target="_blank">AWS Documentation · Amazon Bedrock Data protection</a></cite>
+  </blockquote>
+  <p>
+    The first sentence is the substantive difference between reaching a model through a commercial platform and buying resold account access: in this shape the model provider cannot reach platform logs or customer prompts and completions. The second is a reminder that a platform-side boundary still leaves the question of what you send in the first place to you — which is exactly what the egress redaction and policy blocking below are for. Both are the platform's statements about itself, not our commitment on behalf of any model vendor.
+  </p>
 
   <h2>How are provider keys held?</h2>
   <ul>
@@ -124,6 +135,7 @@ const qa: QA[] = [
     <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
     <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
     <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic API documentation</a> — authoritative reference for Claude access and parameters</li>
+    <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html" rel="nofollow noopener" target="_blank">AWS Documentation · Amazon Bedrock Data protection</a> — the commercial platform's own statement of its data boundary (quoted above)</li>
   </ul>
 
   <p class="footnote">Last updated: {page.dateModified}. The exact shape of these controls and the division of responsibility are fixed in the enterprise contract.</p>

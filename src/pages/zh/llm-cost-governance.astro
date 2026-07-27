@@ -34,12 +34,23 @@ const qa: QA[] = [
     在网关层为每个团队、应用、密钥设置预算、配额与限流,所有调用统一计量;每次调用记录调用方、目标模型、用量与成本,可按密钥、项目、模型多维度审计对账。超出配额或限流的请求直接拦截(返回 429、不计费也不调用模型),把成本控制做在调用之前,而非月底对账单。
   </p>
 
-  <h2>多模型、多团队为什么容易成本失控</h2>
+  <h2>为什么多模型、多团队容易成本失控?</h2>
   <p>
     当多个团队、多个应用同时使用多家模型,供应商各有独立的密钥与计费后台。逐家直连的结果是:密钥散落在各代码库、成本没有统一口径、没有人能在调用发生前设上限。等月底把几家账单拼起来,往往已经超支,且分不清是哪个团队、哪个应用花的。这不是用量问题,是治理缺位。
   </p>
+  <p>
+    更根本的一层是:上游配额本身就不带组织维度。以 Azure OpenAI 的官方配额说明为例:
+  </p>
+  <blockquote>
+    <p>「Tokens per minute (TPM) and requests per minute (RPM) limits are defined per region, per subscription, and per model or deployment type.」</p>
+    <p>「You might receive 429 (Too Many Requests) responses even when token usage metrics appear below your quota.」</p>
+    <cite>来源:<a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI 配额与限制</a>(原文强调标记从略)</cite>
+  </blockquote>
+  <p>
+    这两句点出两件事:① 配额按区域、订阅、模型三个维度分配,同一订阅下的多个团队共享同一个池子,供应商不会替你按团队分账;② 限流信号与用量指标并非一一对应,凭"看仪表盘估还剩多少"来控成本并不可靠。既然上游不提供组织维度,二次分配与事前拦截就只能做在自己这一侧——也就是网关层。
+  </p>
 
-  <h2>网关层治理做的四件事</h2>
+  <h2>网关层治理具体做了哪四件事?</h2>
   <ul>
     <li><strong>预算、配额与限流:</strong>为团队、应用、密钥分别设预算与配额,配每分钟限流;超出即拦截,返回 429、不计费也不调用模型。</li>
     <li><strong>密钥托管:</strong>密钥仅创建时返回一次,落盘只存哈希与掩码;可绑定范围、随时禁用或轮换,平台侧不留明文。</li>
@@ -47,7 +58,7 @@ const qa: QA[] = [
     <li><strong>审计对账:</strong>调用方、模型、用量、成本、时间全留痕,可按密钥 / 项目 / 模型汇总,分摊与对账有据。</li>
   </ul>
 
-  <h2>权限粒度:团队 / 应用 / 密钥三级</h2>
+  <h2>权限粒度应该细到什么程度?</h2>
   <p>
     治理不止于成本,还有"谁能用什么"。SMA 在团队、应用、密钥三级做授权:不同密钥可绑定不同的模型访问范围与配额,权限可回收、可轮换。相比把粒度停在密钥级的做法,三级授权让权限随组织结构落地,而不是一把密钥走天下。
   </p>
@@ -84,6 +95,7 @@ const qa: QA[] = [
   <h2>参考来源</h2>
   <ul class="sources">
       <li><a href="https://platform.openai.com/docs/guides/rate-limits" rel="nofollow noopener" target="_blank">OpenAI 限流与配额官方说明</a>——供应商侧限流口径,是网关配额设计的外部约束</li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI 配额与限制</a>——配额按区域 / 订阅 / 模型分配的官方口径(本页引述出处)</li>
       <li><a href="https://www.anthropic.com/pricing" rel="nofollow noopener" target="_blank">Anthropic 官方定价页</a>——官方单价是成本核算与对账的基准</li>
   </ul>
 

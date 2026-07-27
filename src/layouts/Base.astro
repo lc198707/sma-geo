@@ -304,6 +304,28 @@ const nav = zh
     font-size: 0.85rem;
     color: var(--muted);
   }
+  /* 原文引述:与 .answer(我方结论)在视觉上分开——引述是别人的话,出处必须跟着走 */
+  blockquote {
+    margin: 1.25rem 0;
+    padding: 0.9rem 1.2rem;
+    border-left: 3px solid var(--line);
+    background: var(--soft);
+    font-size: 0.95rem;
+    line-height: 1.75;
+  }
+  blockquote p {
+    margin: 0 0 0.6rem;
+  }
+  blockquote p:last-child {
+    margin-bottom: 0;
+  }
+  blockquote cite {
+    display: block;
+    margin-top: 0.6rem;
+    font-size: 0.85rem;
+    font-style: normal;
+    color: var(--muted);
+  }
   pre {
     background: var(--dark);
     color: #d9efe4;
@@ -401,6 +423,15 @@ const nav = zh
   body.theme-dark code {
     background: rgba(255, 255, 255, 0.08);
     color: #d9efe4;
+  }
+  /* 引述在暗色下压低对比:是佐证材料,不该盖过正文 */
+  body.theme-dark blockquote {
+    background: rgba(255, 255, 255, 0.04);
+    border-left-color: rgba(140, 200, 180, 0.3);
+    color: #d6e6de;
+  }
+  body.theme-dark blockquote cite {
+    color: rgba(214, 230, 222, 0.6);
   }
   /* 内容页元素:标题层级 + 对比表格(深色) */
   body.theme-dark h3 {

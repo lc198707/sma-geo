@@ -67,6 +67,17 @@ const updated = page.dateModified;
       <tr><td>治理与审计能力</td><td colspan="2">两种形态保持一致</td></tr>
     </tbody>
   </table>
+  <p>
+    再往上游一层是模型侧的边界,这一层由云平台自己界定。以 Amazon Bedrock(SMA 接入 Claude 所经的商用平台)的数据保护文档为例:
+  </p>
+  <blockquote>
+    <p>「Because the model providers don't have access to those accounts, they don't have access to Amazon Bedrock logs or to customer prompts and completions.」</p>
+    <p>「We strongly recommend that you never put confidential or sensitive information, such as your customers' email addresses, into tags or free-form text fields such as a Name field.」</p>
+    <cite>来源:<a href="https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html" rel="nofollow noopener" target="_blank">AWS 文档 · Amazon Bedrock Data protection</a></cite>
+  </blockquote>
+  <p>
+    第一句说明模型提供方在该形态下拿不到平台日志与客户的提示词、响应——这是"经商用平台接入"与"账号池转售"在数据边界上的实质差别;第二句则提醒:即便平台侧有边界,哪些内容不该发出去仍由使用方决定,这正是上表出口侧脱敏与红线拦截存在的理由。两句都是平台方对自己的口径,不构成我方对模型厂商行为的承诺。
+  </p>
 
   <h2>模型厂商密钥如何托管?</h2>
   <ul>
@@ -119,6 +130,7 @@ const updated = page.dateModified;
     <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
     <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
     <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic 官方 API 文档</a>——Claude 模型接入方式与参数以官方文档为准</li>
+    <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/data-protection.html" rel="nofollow noopener" target="_blank">AWS 文档 · Amazon Bedrock Data protection</a>——商用平台侧的数据边界口径(本页引述出处)</li>
   </ul>
 
   <p class="footnote">本页最后更新:{updated}。安全能力的具体形态与责任划分以企业合同约定为准。</p>

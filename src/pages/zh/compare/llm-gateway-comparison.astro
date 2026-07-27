@@ -63,7 +63,18 @@ const qa: QA[] = [
     <a href="https://higress.cn" rel="nofollow">Higress 官网</a>;SMA 网关能力以本站说明与合同条款为准。
   </p>
 
-  <h2>六维选型标准</h2>
+  <p>
+    定位差异不必靠揣测,各项目自己写得很清楚。LiteLLM 官方文档开篇的一句自述是:
+  </p>
+  <blockquote>
+    <p>「Call 100+ LLMs using the OpenAI Input/Output Format」</p>
+    <cite>来源:<a href="https://docs.litellm.ai" rel="nofollow noopener" target="_blank">LiteLLM 官方文档</a>(核对日期 2026-07)</cite>
+  </blockquote>
+  <p>
+    这句话本身就是边界:它解决的是<strong>协议与接入</strong>——用一套 OpenAI 格式调用多家模型,这件事它做得很好;它没有声称要解决预算归属、团队授权、审计留痕这类组织问题,因为那不是它的定位。选型分歧多半不在"哪个更好",而在把工具的定位错配到自己的问题上:接入层的问题用接入层解决,治理层的问题才需要治理层。
+  </p>
+
+  <h2>选型该看哪六个维度?</h2>
   <ol>
     <li><strong>协议兼容性:</strong>OpenAI 协议兼容的完整度(流式、函数调用、多模态),现有 SDK 能否零改造。</li>
     <li><strong>路由能力:</strong>策略是否可配置、可校准;故障降级是否自动且对应用透明。</li>
@@ -73,7 +84,7 @@ const qa: QA[] = [
     <li><strong>数据边界:</strong>提示词、密钥、日志保存在谁的环境;是否提供自部署形态。</li>
   </ol>
 
-  <h2>按场景给建议</h2>
+  <h2>不同场景下该怎么选?</h2>
   <h3>中国企业、多模型含国产模型、有合规要求</h3>
   <p>优先核对国产模型一线支持与数据边界(标准第 5、6 条)——这是多数西方项目的弱区,也是 SMA 的设计重心。</p>
   <h3>纯工程团队、海外模型为主、自运维意愿强</h3>

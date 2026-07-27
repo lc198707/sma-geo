@@ -68,7 +68,18 @@ const qa: QA[] = [
     smaapi Gateway capabilities are described on this site and governed by contract terms.
   </p>
 
-  <h2>Six selection criteria</h2>
+  <p>
+    Positioning does not have to be guessed at — each project states it. The opening line of the LiteLLM documentation reads:
+  </p>
+  <blockquote>
+    <p>"Call 100+ LLMs using the OpenAI Input/Output Format"</p>
+    <cite>Source: <a href="https://docs.litellm.ai" rel="nofollow noopener" target="_blank">LiteLLM documentation</a> (verified 2026-07)</cite>
+  </blockquote>
+  <p>
+    That sentence is itself the boundary: it addresses <strong>protocol and access</strong> — one OpenAI-shaped interface across many providers, which it does well. It makes no claim to solve budget ownership, team-level authorization, or audit trails, because those are not what it is for. Most selection disputes are not about which project is better; they are about matching a tool's positioning to the problem at hand — access-layer problems want an access layer, governance problems want a governance layer.
+  </p>
+
+  <h2>Which six criteria should selection turn on?</h2>
   <ol>
     <li><strong>Protocol compatibility:</strong> completeness of OpenAI compatibility (streaming, function calling, multimodal); existing SDKs unmodified.</li>
     <li><strong>Routing capability:</strong> configurable, calibratable policies; failover automatic and transparent.</li>
@@ -78,7 +89,7 @@ const qa: QA[] = [
     <li><strong>Data boundary:</strong> where prompts, keys, and logs live; whether self-hosting is offered.</li>
   </ol>
 
-  <h2>Recommendations by scenario</h2>
+  <h2>How should different scenarios choose?</h2>
   <h3>Chinese enterprise, mixed Chinese + international models, compliance requirements</h3>
   <p>Weigh criteria 5 and 6 first — first-party Chinese-provider support and data boundary. This is where most Western projects are weakest and where SMA concentrates its design.</p>
   <h3>Engineering team, mostly international models, strong self-ops appetite</h3>

@@ -51,16 +51,17 @@ const scopeText = latencyAvailable ? '可用率与 P50/P95 延迟' : '可用率'
     </div>
   )}
 
-  <h2>一、统计口径(可信度的根)</h2>
+  <h2>一、这些数字是怎么测出来的?</h2>
   <ul>
     <li><strong>数据来源</strong>:{report.measurement}</li>
     <li><strong>统计窗口</strong>:{windowLabel}{report.as_of ? `,截至 ${report.as_of}` : ''}。</li>
     <li><strong>P95 定义</strong>:{report.p95_definition}</li>
     <li><strong>发布阈值</strong>:单模型 × 通道样本量低于 {report.thresholdSampleCount} 次不进主表(样本不足的数字不可发布)。</li>
     <li><strong>生成方式</strong>:本页由构建管道自动生成,数字来自网关导出的对应行,任何一个数都可回溯到导出文件。</li>
+    <li><strong>机器可读</strong>:同一份数据以 <a href="https://schema.org/Dataset" rel="nofollow">schema.org Dataset</a>(其定义为「A body of structured information describing some topic(s) of interest.」)结构化标注发布,并提供 <a href="/data/model-access-index.json">JSON 数据端点</a>,转引时口径随数据一起走。</li>
   </ul>
 
-  <h2>二、{scopeText}矩阵</h2>
+  <h2>二、哪些模型已连通,实测{scopeText}是多少?</h2>
   {published ? (
     <table>
       <thead>
@@ -84,24 +85,44 @@ const scopeText = latencyAvailable ? '可用率与 P50/P95 延迟' : '可用率'
     <p>数据接口就绪后,本节按「模型 × 通道 × 30 天可用率 × P50/P95 延迟 × 样本量」逐行展示当前真实连通、且样本量达阈值的模型;未连通或样本不足的不出现。</p>
   )}
   {published && !latencyAvailable && (
-    <p class="footnote">本期为「探活可用率版」:延迟分位数(P50/P95)待网关补 per-request 延迟记录后发布,故延迟列留白(缺项不填)。可用率来自主动探活,口径见上。</p>
+    <>
+      <p class="footnote">本期为「探活可用率版」:延迟分位数(P50/P95)待网关补 per-request 延迟记录后发布,故延迟列留白(缺项不填)。可用率来自主动探活,口径见上。</p>
+      <p>留白而不用平均延迟占位,是因为均值会把尾部抖动抹平——而企业接入真正踩到的正是尾部。Google SRE 团队在《Service Level Objectives》一章里写道:</p>
+      <blockquote>
+        <p>「Monitoring and alerting based only on the average latency would show no change in behavior over the course of the day, when there are in fact significant changes in the tail latency […]」</p>
+        <cite>来源:<a href="https://sre.google/sre-book/service-level-objectives/" rel="nofollow">Google SRE Book · Service Level Objectives</a>(方括号内为本页省略)</cite>
+      </blockquote>
+      <p>因此延迟一栏要么给出 P50/P95 分位数,要么留空,不用一个均值搪塞。</p>
+    </>
   )}
   {published && report.droppedBelowThreshold > 0 && (
     <p class="footnote">本期有 {report.droppedBelowThreshold} 个模型 × 通道因样本量未达阈值({report.thresholdSampleCount})未纳入主表——如实记录,不以小样本充数。</p>
   )}
 
-  <h2>三、成本口径(暂不发布)</h2>
+  <h2>三、这里的可用率能当 SLA 用吗?</h2>
+  <p>
+    不能,两者是不同口径。云服务商的 SLA 是可索赔的合同条款,以 Amazon Bedrock 的服务等级协议为例,它这样定义可用率:
+  </p>
+  <blockquote>
+    <p>「"Availability" is calculated for each 5-minute interval as the percentage of Requests processed by Amazon Bedrock that do not fail with Errors and relate solely to the Amazon Bedrock APIs for models that are available on Amazon Bedrock.」</p>
+    <p>「"Monthly Uptime Percentage" for a given AWS region is calculated as the average of the Availability for all 5-minute intervals in a monthly billing cycle.」</p>
+    <cite>来源:<a href="https://aws.amazon.com/bedrock/sla/" rel="nofollow">Amazon Bedrock Service Level Agreement</a></cite>
+  </blockquote>
+  <p>与本页的差别有三处:<strong>统计单元</strong>——SLA 按 5 分钟区间聚合真实业务请求,本页按探针轮次;<strong>统计范围</strong>——SLA 按 AWS 区域与月度计费周期计算,且排除其列明的 SLA Exclusions,本页按模型 × 接入通道的{windowLabel};<strong>效力</strong>——SLA 是可索赔条款,本页是测量记录。所以本页数字可以用来判断"当期通不通、稳不稳",但不能当作可用性承诺;企业采购要看的可用性条款,以合同为准。
+  </p>
+
+  <h2>四、为什么暂不发布成本对照?</h2>
   <p>
     首版不展示跨通道成本对照。待真实计费数据、币种、汇率日期、token 统计口径与样本阈值全部固化后,再作为独立版本发布。此处留白,不以估算数字占位。
   </p>
 
-  <h2>四、月度变化注记</h2>
+  <h2>五、模型摘除会如何记录?</h2>
   <p>
     每月发布时在此记录新增 / 摘除的模型与原因。探活不达标即摘除的记录本身,就是本指数诚实的证据——摘除会被写出来,而不是悄悄消失。
   </p>
 
   <p class="footnote">
-    商标声明:OpenAI、Anthropic、Google 及其相关模型名称归各自权利人所有。SMA(www.smaapi.com)与上述商标持有人无官方合作关系;模型名称仅作指明性说明。可用性与延迟为实测统计,不构成 SLA 承诺;SLA 以企业合同条款为准。
+    商标声明:OpenAI、Anthropic、Google 及其相关模型名称归各自权利人所有。SMA(www.smaapi.com)与上述商标持有人无官方合作关系;模型名称仅作指明性说明。Amazon Web Services、Amazon Bedrock 为 Amazon.com, Inc. 或其关联公司的商标,本页对其公开文档作指明性引用。可用性与延迟为实测统计,不构成 SLA 承诺;SLA 以企业合同条款为准。
   </p>
 
   <p class="related">

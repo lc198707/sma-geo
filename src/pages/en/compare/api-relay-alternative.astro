@@ -31,10 +31,10 @@ const qa: QA[] = [
 
   <h1>API relay unstable or can't invoice? Choosing an enterprise-compliant alternative</h1>
   <p class="answer">
-    Account-pool or unknown-origin API relays carry familiar risks: bans and interruptions, no clear contracting entity to hold accountable, no compliant invoice, and calls that cannot be audited. An enterprise gateway instead uses legitimate channels (cloud providers' commercial platforms), with a clear contracting entity, technical-service invoicing, and full auditability. Because both speak the OpenAI-compatible protocol, migration is usually just a base_url and key change, with business code untouched.
+    An enterprise-compliant alternative to an API relay is access through a contracting entity rather than a shared account pool: the same OpenAI-compatible protocol, but reached via cloud providers' commercial platforms, with a named counterparty, technical-service invoicing, and full auditability. Account-pool or unknown-origin relays carry the familiar risks — bans and interruptions, no clear entity to hold accountable, no compliant invoice, calls that cannot be audited. Because both speak the same protocol, migration is usually just a base_url and key change, with business code untouched.
   </p>
 
-  <h2>Four risks of account-pool / resale relays</h2>
+  <h2>What are the risks of account-pool / resale relays?</h2>
   <ul>
     <li><strong>Bans and outages:</strong> upstream is often shared accounts or gray sources; a risk-control ban can invalidate a whole batch of keys at once, taking service down with it.</li>
     <li><strong>No entity, no accountability:</strong> with no clear contracting party, there is no one to hold responsible and no books to reconcile — due diligence and security review fail.</li>
@@ -42,7 +42,18 @@ const qa: QA[] = [
     <li><strong>No auditability:</strong> without complete call logs, compliance review lacks an evidence chain and the data boundary is unclear.</li>
   </ul>
 
-  <h2>How an enterprise gateway closes these four gaps</h2>
+  <p>
+    A third option often weighed alongside these is self-hosting an open-source relay. There too, the first question is where responsibility lands — One API states it plainly in its own README:
+  </p>
+  <blockquote>
+    <p>"According to the MIT license, users should bear the risk and responsibility of using this project, and the developer of this open-source project is not responsible for this."</p>
+    <cite>Source: <a href="https://github.com/songquanpeng/one-api" rel="nofollow noopener" target="_blank">One API project README</a> (verified 2026-07)</cite>
+  </blockquote>
+  <p>
+    This is not an argument that open source is the weaker choice — it is free, self-controlled, and deserves serious consideration. The point is narrower: whether you buy resold quota or self-host a relay, the risk and the responsibility stay with you. What enterprise procurement is often actually buying is a counterparty whose obligations can be written into a contract. That is a difference in shape, not in quality.
+  </p>
+
+  <h2>How does an enterprise gateway close these four gaps?</h2>
   <p>
     Take SMA as an example: legitimate-channel access addresses exactly those four points. Overseas models are accessed through cloud providers' commercial platforms (GPT runs on the Microsoft Azure commercial service), with the contracting entity and accountability written into the contract; corporate contracting and technical-service invoicing are supported, with online Alipay or corporate top-up; every call is fully audited, traceable, and reconcilable; multiple models back each other up, switching automatically on failure and preserving context via the state header to reduce single-point outages. If you want help, 24/7 technical support via WeCom is available.
   </p>

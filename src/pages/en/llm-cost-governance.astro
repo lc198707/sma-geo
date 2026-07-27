@@ -31,15 +31,26 @@ const qa: QA[] = [
 
   <h1>How do multi-team orgs govern LLM cost and permissions?</h1>
   <p class="answer">
-    Set budgets, quotas, and rate limits per team, application, and key at the gateway layer; meter every call and record caller, target model, usage, and cost, ready to reconcile by key, project, or model. Over-quota or over-limit requests are blocked (429, with no billing and no model call), putting cost control before the call rather than at month-end reconciliation.
+    LLM cost and permission governance is the practice of setting budgets, quotas, and rate limits per team, application, and key at the gateway layer, then metering every call — caller, target model, usage, and cost — so spend can be reconciled by key, project, or model. Over-quota or over-limit requests are blocked (429, with no billing and no model call), putting cost control before the call rather than at month-end reconciliation.
   </p>
 
-  <h2>Why multi-model, multi-team usage drifts out of control</h2>
+  <h2>Why does multi-model, multi-team usage drift out of control?</h2>
   <p>
     When several teams and applications use multiple providers at once, each provider has its own keys and billing backend. Integrating directly leaves keys scattered across repos, costs without a single source of truth, and no one able to set a ceiling before the call happens. By the time the invoices are stitched together at month-end, the budget is often already blown — and it is unclear which team or application spent it. That is not a usage problem; it is missing governance.
   </p>
+  <p>
+    There is a layer beneath that: upstream quota carries no organizational dimension to begin with. Azure OpenAI's own quota documentation puts it plainly:
+  </p>
+  <blockquote>
+    <p>"Tokens per minute (TPM) and requests per minute (RPM) limits are defined per region, per subscription, and per model or deployment type."</p>
+    <p>"You might receive 429 (Too Many Requests) responses even when token usage metrics appear below your quota."</p>
+    <cite>Source: <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI quotas and limits</a> (emphasis marks in the original omitted)</cite>
+  </blockquote>
+  <p>
+    Two consequences follow: first, quota is allocated per region, per subscription, and per model — teams sharing one subscription share one pool, and the provider will not split the bill by team for you; second, the throttling signal and the usage metrics do not map one-to-one, so "watch the dashboard and estimate what's left" is not a reliable way to hold a budget. Since upstream offers no organizational dimension, sub-allocation and up-front blocking can only happen on your side of the line — at the gateway.
+  </p>
 
-  <h2>Four things gateway-layer governance does</h2>
+  <h2>Which four things does gateway-layer governance do?</h2>
   <ul>
     <li><strong>Budgets, quotas, and rate limits:</strong> per team, application, and key; over-limit requests are blocked, returning 429 with no billing and no model call.</li>
     <li><strong>Key custody:</strong> keys are returned once at creation and stored as a hash plus mask; scoped, disable-able, and rotatable, with no plaintext kept.</li>
@@ -47,7 +58,7 @@ const qa: QA[] = [
     <li><strong>Audit reconciliation:</strong> caller, model, usage, cost, and time are logged, aggregating by key, project, or model for allocation and reconciliation.</li>
   </ul>
 
-  <h2>Permission granularity: team / application / key</h2>
+  <h2>How fine should permission granularity be?</h2>
   <p>
     Governance is not only about cost but also about who may use what. SMA authorizes at three levels — team, application, and key: different keys can carry different model-access scopes and quotas, and permissions can be revoked or rotated. Compared with stopping at key-level granularity, three-level authorization lets permissions follow your org structure rather than one key doing everything.
   </p>
@@ -85,6 +96,7 @@ const qa: QA[] = [
   <ul class="sources">
       <li><a href="https://platform.openai.com/docs/guides/rate-limits" rel="nofollow noopener" target="_blank">OpenAI rate limits guide</a> — provider-side limits that constrain gateway quota design</li>
       <li><a href="https://www.anthropic.com/pricing" rel="nofollow noopener" target="_blank">Anthropic pricing</a> — official list prices as the basis for cost reconciliation</li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI quotas and limits</a> — the official statement that quota is scoped per region / subscription / model (quoted above)</li>
   </ul>
 
   <div class="related">
