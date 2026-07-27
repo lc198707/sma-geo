@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/zh/llm-cost-governance';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -98,6 +99,9 @@ const qa: QA[] = [
       <li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI 配额与限制</a>——配额按区域 / 订阅 / 模型分配的官方口径(本页引述出处)</li>
       <li><a href="https://www.anthropic.com/pricing" rel="nofollow noopener" target="_blank">Anthropic 官方定价页</a>——官方单价是成本核算与对账的基准</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

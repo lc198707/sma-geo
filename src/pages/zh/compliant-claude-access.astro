@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/zh/compliant-claude-access';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -38,12 +39,12 @@ const qa: QA[] = [
     合规稳定用 Claude 的做法是经云服务商商用平台接入——Claude 在 AWS Bedrock 与 Google Cloud Vertex AI 上以商用服务提供,企业以自己的云主体签约,有合同、可开技术服务发票、调用全程可审计,而非依赖会被风控批量封禁的个人账号池。场景上,企业内部生产经营使用与面向境内公众提供服务是两套监管,后者须用已备案模型。SMA 作为授权的 AWS 合作伙伴,已经 AWS Bedrock 商用平台真实接通 Claude,并在其上提供一套 OpenAI 兼容接口的统一接入、全链路审计与故障切换,让接入不因单一账号或线路问题中断。
 </p>
 
-  <h2>为什么 Claude 账号总被封</h2>
+  <h2>为什么 Claude 账号总被封?</h2>
   <p>
     被封的通常不是"用 Claude"本身,而是接入方式。个人账号、共享账号池、来源不明的转售,本质是拿一批账号在多方之间共用;这类流量容易触发平台风控,被判定为异常使用时整批账号一起封禁——你为业务投入的密钥会随账号一起失效,服务当天中断。把可用性寄托在"账号别被发现",在企业生产里是不可控的。
   </p>
 
-  <h2>合规稳定的路径:云服务商商用平台</h2>
+  <h2>合规稳定的路径长什么样?</h2>
   <p>
     Claude 面向企业的正规路径是经云服务商的商用平台接入:AWS Bedrock 与 Google Cloud Vertex AI 都以托管商用服务提供 Claude。这条路的关键差别是——你用的是企业自己的云账户与签约主体,不依赖被共用的账号池,因此不承受账号池被封的连带中断。
   </p>
@@ -67,12 +68,12 @@ const qa: QA[] = [
     </tbody>
   </table>
 
-  <h2>内部使用与面向公众:两套监管</h2>
+  <h2>内部使用与面向公众,适用哪套监管?</h2>
   <p>
     企业内部生产经营使用 Claude(如研发、办公、内部分析),与面向境内公众提供生成式 AI 服务,是不同的监管口径。后者按现行要求须使用已备案模型。一套网关可以承接两类场景:把面向公众的流量自动路由到国产备案模型,把内部场景留给合适的模型,各守各的边界;涉个人信息或重要数据的出境按企业自身评估处理。
   </p>
 
-  <h2>SMA 在这件事上做了什么</h2>
+  <h2>SMA 在这件事上做了什么?</h2>
   <p>
     SMA 是企业级 AI 网关:应用侧用一套 OpenAI 兼容 API 接入,网关侧记录完整调用审计、按数据等级把请求路由到境内备案模型、在出口对敏感信息脱敏,并在模型或线路异常时按错误分级自动切换、以状态续接保留上下文。这样接入不因单一账号或某条线路的问题而中断。其中 Claude 已由 SMA 作为授权 AWS 合作伙伴、经 AWS Bedrock 通道真实接通、可路由;其余模型以实时数据与合同为准,只列真实连通的。
   </p>
@@ -92,7 +93,7 @@ const qa: QA[] = [
     一句话:单模型、内部用,直连就好;要在多模型、多团队、面向公众、高可用这几件事上省心,网关这一层才划算。
   </p>
 
-  <h2>从账号池迁到合规通道</h2>
+  <h2>怎么从账号池迁到合规通道?</h2>
   <p>
     迁移成本通常很低:因为账号池与企业级通道同为 OpenAI 兼容协议,把 base_url 与密钥指向网关即可,业务代码不动。把"担心账号哪天被封"换成"接入由合同与审计托底",是企业把 Claude 用进生产的前提。
   </p>
@@ -119,6 +120,9 @@ const qa: QA[] = [
       <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Bedrock 官方文档</a>——云商用平台承载模型调用的官方说明</li>
       <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

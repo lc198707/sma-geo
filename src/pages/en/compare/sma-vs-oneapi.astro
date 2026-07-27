@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../../lib/schema';
 import pagesData from '../../../data/pages.json';
 import MeasuredAnchor from '../../../components/MeasuredAnchor.astro';
+import EntityNote from '../../../components/EntityNote.astro';
 
 const route = '/en/compare/sma-vs-oneapi';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -109,6 +110,9 @@ const qa: QA[] = [
   <ul class="sources">
       <li><a href="https://docs.litellm.ai/docs/proxy/quick_start" rel="nofollow noopener" target="_blank">LiteLLM Proxy docs</a> — capability scope of the open-source multi-model proxy</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related questions:</p>

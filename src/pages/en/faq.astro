@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, type QA } from '../../lib/schema';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/en/faq';
 
@@ -12,7 +13,7 @@ interface QAGroup {
 
 const groups: QAGroup[] = [
   {
-    title: 'Getting started & integration',
+    title: 'How do I get started and integrate?',
     items: [
       {
         q: 'How do I call multiple model providers through one OpenAI-compatible API?',
@@ -37,7 +38,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: 'Routing, governance & reliability',
+    title: 'How do routing, governance, and reliability work?',
     items: [
       {
         q: 'What logic does smart routing use to dispatch requests?',
@@ -58,7 +59,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: 'Compliance & data',
+    title: 'How are compliance and data boundaries defined?',
     items: [
       {
         q: 'How can a company in China use the Claude API through proper channels?',
@@ -79,7 +80,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: 'Comparison & selection',
+    title: 'How does it compare to the alternatives?',
     items: [
       {
         q: 'What is an enterprise LLM gateway?',
@@ -109,9 +110,11 @@ const allQa = groups.flatMap((g) => g.items);
 
   <h1>FAQ: Multi-Model Access, Smart Routing, Cost Governance &amp; Audit</h1>
   <p class="answer">
-    Direct answers, by theme, to what enterprises ask when putting multiple LLM providers behind one
-    gateway: getting started &amp; integration, routing/governance/reliability, compliance &amp; data,
-    and how it compares to self-hosted or resale options.
+    An enterprise LLM gateway is a layer that puts multiple model providers behind one OpenAI-compatible
+    endpoint, with routing, budgets, permissions, and audit applied centrally. This page answers, by theme,
+    what enterprises actually ask before adopting one: getting started and integration, routing and
+    reliability, governance and cost, compliance and data boundaries, and where the line runs against
+    self-hosted or resale alternatives. Each answer is short enough to quote on its own.
   </p>
 
   <nav class="faq-toc" aria-label="Question categories">
@@ -130,13 +133,46 @@ const allQa = groups.flatMap((g) => g.items);
     </section>
   ))}
 
+  <h2>Which of these answers rest on primary sources?</h2>
+  <p>
+    The compliance answers above rest on public texts you can check, not on our reading of them. Take the
+    question asked most often — whether a security assessment and algorithm filing are required. Article 17
+    of China's Interim Measures for the Management of Generative AI Services reads, verbatim:
+  </p>
+  <blockquote>
+    <p>"提供具有舆论属性或者社会动员能力的生成式人工智能服务的，应当按照国家有关规定开展安全评估，并按照《互联网信息服务算法推荐管理规定》履行算法备案和变更、注销备案手续。"</p>
+    <cite>
+      — Interim Measures for the Management of Generative AI Services, Article 17. Working translation:
+      providers of generative AI services with public-opinion attributes or social-mobilisation capacity must
+      carry out a security assessment under the relevant state rules and complete algorithm filing (and any
+      change or cancellation of that filing) under the Provisions on the Management of Algorithmic
+      Recommendations in Internet Information Services. Source:
+      <a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Cyberspace Administration of China</a>
+      (the Chinese text is authoritative).
+    </cite>
+  </blockquote>
+  <p>
+    The obligation attaches to the <strong>shape of the service</strong>, not to which vendor's model is behind
+    it: whether it carries public-opinion attributes or social-mobilisation capacity, and whether it is offered
+    to the public within mainland China. What a gateway can do is route public-facing traffic to registered
+    domestic models and keep calls and data boundaries logged for review. Whether a specific workload falls
+    under this article is a determination each enterprise makes with its own counsel — we do not make that call
+    on your behalf. The companion provision on scope (Article 2(3)) is quoted on the
+    <a href="/en/transparency">transparency page</a>.
+  </p>
+
   <MeasuredAnchor lang="en" context="availability" />
 
   <h2>References</h2>
   <ul class="sources">
       <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
       <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
+      <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Documentation · What is Amazon Bedrock</a> — the commercial platform behind the Claude access path described above</li>
+      <li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI quotas and limits</a> — upstream quota and rate-limit semantics referenced in the governance answers</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related questions:</p>

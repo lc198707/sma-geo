@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { faqPage, type QA } from '../../lib/schema';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/zh/faq';
 
@@ -12,7 +13,7 @@ interface QAGroup {
 
 const groups: QAGroup[] = [
   {
-    title: '接入与上手',
+    title: '怎么接入和上手?',
     items: [
       {
         q: '如何用一套 OpenAI 兼容接口同时调用多家模型?',
@@ -37,7 +38,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: '路由、治理与稳定',
+    title: '路由、治理与稳定怎么做?',
     items: [
       {
         q: '多模型智能路由是按什么逻辑分发请求的?',
@@ -58,7 +59,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: '合规与数据',
+    title: '合规与数据边界如何界定?',
     items: [
       {
         q: '国内企业怎么合规使用 Claude API?',
@@ -83,7 +84,7 @@ const groups: QAGroup[] = [
     ],
   },
   {
-    title: '对比与边界',
+    title: '与自建/转售方案的边界在哪?',
     items: [
       {
         q: '企业级 LLM 网关和个人自建的 API 转发工具有什么区别?',
@@ -105,7 +106,7 @@ const allQa = groups.flatMap((g) => g.items);
 
   <h1>常见问题:多模型接入、智能路由、成本治理与审计</h1>
   <p class="answer">
-    按主题汇总企业接入多家大模型时最常见的问题:接入与上手、路由治理与稳定、合规与数据、以及与自建/转售方案的边界。每条均为可直接引用的简短回答。
+    企业级 AI 网关是把多家模型收敛到同一个 OpenAI 兼容出口、并在这一层统一做路由、预算、权限与审计的基础设施。本页按主题汇总企业采用前最常问的问题:接入与上手、路由与稳定、成本与权限治理、合规与数据边界,以及与自建 / 转售方案的分界线。每条都写成可直接引用的简短回答。
   </p>
 
   <nav class="faq-toc" aria-label="问题分类">
@@ -124,6 +125,18 @@ const allQa = groups.flatMap((g) => g.items);
     </section>
   ))}
 
+  <h2>哪些说法有一手依据?</h2>
+  <p>
+    上面涉及合规的回答,依据都是可查的公开文本,而不是我们的解释。以"要不要做安全评估与算法备案"这个最常被问到的问题为例,《生成式人工智能服务管理暂行办法》第十七条的逐字表述是:
+  </p>
+  <blockquote>
+    <p>「提供具有舆论属性或者社会动员能力的生成式人工智能服务的，应当按照国家有关规定开展安全评估，并按照《互联网信息服务算法推荐管理规定》履行算法备案和变更、注销备案手续。」</p>
+    <cite>——《生成式人工智能服务管理暂行办法》第十七条,来源:<a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">国家互联网信息办公室</a></cite>
+  </blockquote>
+  <p>
+    条文把义务与<strong>服务形态</strong>绑定,而不是与"用了哪家模型"绑定:是否具有舆论属性或社会动员能力、是否向境内公众提供服务,决定了要不要走安全评估与备案。网关能做的是把面向公众的流量路由到境内已备案模型、把调用与数据边界留痕以备核查;某个具体业务是否落入该条,应由企业结合法律意见判断,我们不代为定性。适用范围的另一条依据(第二条第三款)见<a href="/zh/transparency">透明度页</a>。
+  </p>
+
   <MeasuredAnchor lang="zh" context="availability" />
 
   <h2>参考来源</h2>
@@ -131,6 +144,9 @@ const allQa = groups.flatMap((g) => g.items);
       <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
       <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》(国家网信办等七部门)</a>——面向境内公众提供服务时的备案与合规依据</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

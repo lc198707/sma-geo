@@ -50,7 +50,7 @@
       "title": "常见问题:多模型接入、智能路由、成本治理与审计 | SMA",
       "description": "关于企业级 AI 网关的常见问题:与自建转发工具的区别、OpenAI 兼容接入方式、路由逻辑、成本治理、国产模型支持、数据边界与故障切换。",
       "datePublished": "2026-06-10",
-      "dateModified": "2026-06-11",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "核心页面",
         "label": "FAQ",
@@ -78,7 +78,7 @@
       "title": "LLM 网关选型对比:SMA 网关(smaapi)vs LiteLLM / Portkey / Kong / Higress",
       "description": "主流 LLM 网关定位对比与六维选型标准:协议兼容、路由、治理粒度、审计、模型覆盖真实性、数据边界。按团队场景给出建议。",
       "datePublished": "2026-06-10",
-      "dateModified": "2026-06-11",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "核心页面",
         "label": "LLM 网关选型对比",
@@ -148,7 +148,7 @@
       "title": "LLM Gateway Comparison: smaapi (SMA) vs LiteLLM / Portkey / Kong AI Gateway / Higress",
       "description": "Positioning comparison of mainstream LLM gateways plus six selection criteria: protocol compatibility, routing, governance granularity, audit, honesty of model coverage, data boundary.",
       "datePublished": "2026-06-10",
-      "dateModified": "2026-06-11",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Core pages",
         "label": "LLM gateway comparison",
@@ -162,7 +162,7 @@
       "title": "FAQ: Multi-Model Access, Smart Routing, Cost Governance & Audit | smaapi",
       "description": "Frequently asked questions about enterprise AI gateways: differences from self-hosted relay tools, OpenAI-compatible integration, routing logic, cost governance, data boundaries, and failover.",
       "datePublished": "2026-06-10",
-      "dateModified": "2026-06-11",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Core pages",
         "label": "FAQ",
@@ -190,7 +190,7 @@
       "title": "多团队大模型成本与权限治理:预算、配额、密钥与审计对账 | SMA",
       "description": "多团队使用大模型如何管控成本与权限:在网关层为团队、应用、密钥设预算、配额与限流,所有调用统一计量,按密钥/项目/模型审计对账,超额自动拦截(429、不计费)。",
       "datePublished": "2026-06-13",
-      "dateModified": "2026-06-13",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "场景指南",
         "label": "多团队大模型成本权限治理",
@@ -232,7 +232,7 @@
       "title": "LLM Cost & Permission Governance for Multi-Team Orgs: Budgets, Quotas, Keys, Audit | smaapi",
       "description": "How multi-team organizations govern LLM cost and permissions: set budgets, quotas, and rate limits per team, application, and key at the gateway; meter every call; reconcile by key, project, or model; block overruns automatically (429, no billing).",
       "datePublished": "2026-06-13",
-      "dateModified": "2026-06-13",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Scenario guides",
         "label": "Multi-team LLM cost and permission governance",
@@ -260,7 +260,7 @@
       "title": "API 中转站不稳、开不了票?企业级合规替代与迁移指南 | SMA",
       "description": "个人账号池/来源不明转售类 API 中转的常见风险:封号中断、无合同主体、开不了合规票、调用无法审计。企业级网关以正规渠道接入、签约主体明确、可开技术服务发票、全链路审计;因同为 OpenAI 兼容,迁移通常只改 base_url。",
       "datePublished": "2026-06-16",
-      "dateModified": "2026-06-16",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "核心页面",
         "label": "账号池 / 转售类 API 的企业级合规替代与迁移",
@@ -274,7 +274,7 @@
       "title": "API Relay Unstable or Can't Invoice? Enterprise-Compliant Alternative & Migration | smaapi",
       "description": "Account-pool or unknown-origin API relay services carry real risks: bans and interruptions, no contracting entity, no compliant invoice, no auditability. An enterprise gateway uses legitimate channels with a clear contracting entity, technical-service invoicing, and full audit; migration is usually just a base_url change since both are OpenAI-compatible.",
       "datePublished": "2026-06-16",
-      "dateModified": "2026-06-16",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Core pages",
         "label": "Enterprise alternative to API relays, and how to migrate",
@@ -317,7 +317,7 @@
       "title": "smaapi 海外模型企业接入指数:已连通模型可用率实测 | SMA",
       "description": "由 SMA 网关(www.smaapi.com,均路科技)主动探活实测产出的海外模型企业接入指数:当前真实连通模型 × 通道的可用率与样本量;仅统计样本量达阈值的模型,数字构建时注入、不手填。延迟分位数(P50/P95)待网关补 per-request 延迟记录后发布。",
       "datePublished": "2026-07-05",
-      "dateModified": "2026-07-25",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "数据报告",
         "label": "smaapi 海外模型企业接入指数",
@@ -332,7 +332,7 @@
       "title": "smaapi Overseas Model Access Index: Measured Availability of Connected Models | smaapi",
       "description": "An overseas model access index measured by the SMA gateway (www.smaapi.com, Slime Mould Tech) through active probing: availability and sample count per connected model x channel; only models above the sample threshold are listed, and figures are injected at build time, never hand-filled. Latency percentiles (P50/P95) will ship once the gateway records per-request latency.",
       "datePublished": "2026-07-05",
-      "dateModified": "2026-07-25",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Data reports",
         "label": "smaapi Overseas Model Access Index",
@@ -346,7 +346,7 @@
       "title": "SMA 网关的安全与数据边界:提示词、密钥与日志保存在哪里 | SMA",
       "description": "企业接入多家大模型时,提示词、模型厂商密钥与调用日志分别保存在谁的环境里?SMA 网关的安全设计:密钥集中托管与细粒度授权、出口侧敏感信息脱敏、企业红线命中即阻断、全链路审计,以及云端与自部署两种形态的数据边界差异。",
       "datePublished": "2026-07-25",
-      "dateModified": "2026-07-25",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "信任与透明",
         "label": "SMA 安全与数据边界",
@@ -374,7 +374,7 @@
       "title": "Security and data boundaries of the SMA gateway | smaapi",
       "description": "When an enterprise adopts several LLM providers, whose environment holds the prompts, the provider keys, and the call logs? How the smaapi gateway handles it: centrally held keys with scoped authorization, redaction at the egress, red lines enforced at the gateway, a full audit trail, and the boundary difference between hosted and self-hosted deployments.",
       "datePublished": "2026-07-25",
-      "dateModified": "2026-07-25",
+      "dateModified": "2026-07-26",
       "llms": {
         "section": "Trust & transparency",
         "label": "SMA security and data boundaries",

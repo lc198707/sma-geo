@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/en/llm-cost-governance';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -98,6 +99,9 @@ const qa: QA[] = [
       <li><a href="https://www.anthropic.com/pricing" rel="nofollow noopener" target="_blank">Anthropic pricing</a> — official list prices as the basis for cost reconciliation</li>
       <li><a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/quotas-limits" rel="nofollow noopener" target="_blank">Microsoft Learn · Azure OpenAI quotas and limits</a> — the official statement that quota is scoped per region / subscription / model (quoted above)</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related:</p>

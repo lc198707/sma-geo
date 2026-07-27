@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/zh/overseas-llm-high-availability';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -34,22 +35,22 @@ const qa: QA[] = [
     稳定来自冗余、治理与监控,而非单点。软件层:多模型互为备份,某个模型端点返回限流、超时或故障时,SMA 自动切换到候选模型,并以状态续接保留上下文,切换对应用透明、完整记入审计。硬件层:SMA Edge(物理网关)对模型端点做主动实时健康监控、支持预判式切换,需配合 SMA 网关硬件。应用侧始终是一套不变的 OpenAI 兼容出口,可用性以合同 SLA 为准。
   </p>
 
-  <h2>海外模型为什么会不稳</h2>
+  <h2>海外模型为什么会不稳?</h2>
   <p>
     把海外大模型用进生产,常遇到限流(429)、超时、偶发 5xx、线路波动。单点直连一家模型时,这些都会直接变成业务中断;深夜出问题,降级与切换还要靠人改代码。稳定不是寄望某一家模型不出问题,而是设计上让单点故障不至于拖垮业务。
   </p>
 
-  <h2>软件层:错误分级 + 自动切换 + 状态续接</h2>
+  <h2>软件层怎么做:错误分级、自动切换、状态续接?</h2>
   <p>
     SMA 按错误类型分级处理:可恢复错误(限流、超时、5xx、空响应)自动切换到候选模型,并以状态续接(State Header)把上下文带过去,切换对应用透明、完整记入审计;鉴权或内容策略类错误不切换,避免把认证或合规事故扩散。每请求的后备切换有界(默认最多一次),不在多家模型间无限重试。
   </p>
 
-  <h2>硬件层:SMA Edge 主动健康监控</h2>
+  <h2>硬件层多做了什么(SMA Edge 主动健康监控)?</h2>
   <p>
     软件层是错误发生后的兜底切换;要做到"在故障显现前就避开",需要对模型端点的实时运行状态持续监控。这一层由 SMA Edge(物理网关)提供:主动实时健康监控配合预判式切换——此项为硬件能力,需配合 SMA 网关硬件交付,与 API 接入共享入口。软件层先用起来,硬件层作为更高可用的升级路径。
   </p>
 
-  <h2>应用侧零改动:一套不变的出口</h2>
+  <h2>应用侧需要改代码吗?</h2>
   <p>
     无论底层模型如何切换、线路如何调整,应用面对的始终是一套不变的 OpenAI 兼容出口。供应商或路由变化不影响上层代码——这正是"模型可换、接入不变"的稳定来源,也让你不必为高可用去改业务代码。
   </p>
@@ -87,6 +88,9 @@ const qa: QA[] = [
       <li><a href="https://status.openai.com" rel="nofollow noopener" target="_blank">OpenAI 官方状态页</a>——供应商侧可用性事件的第一手来源</li>
       <li><a href="https://status.anthropic.com" rel="nofollow noopener" target="_blank">Anthropic 官方状态页</a>——Claude 侧可用性事件的第一手来源</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

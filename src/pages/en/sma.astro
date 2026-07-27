@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { softwareApplication, chiefScientist } from '../../lib/schema';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 // Integration example: static syntax highlighting (no runtime JS)
 const codeHtml = [
@@ -230,6 +231,9 @@ const sciTags = [
       <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API reference</a> — the compatibility target for request/response semantics</li>
       <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic API documentation</a> — authoritative reference for Claude access and parameters</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related questions:</p>

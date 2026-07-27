@@ -43,6 +43,9 @@ Transparency: https://www.smaapi.com/zh/transparency
 Transparency-en: https://www.smaapi.com/en/transparency
 Security: https://www.smaapi.com/zh/security
 Measured-data: https://www.smaapi.com/zh/reports/model-access-benchmark
+# 同一份数据的结构化端点(引用约定随数据一起走,转引时口径不易丢失)
+# The same data as a structured endpoint; citation terms travel with the data
+Data-endpoint: https://www.smaapi.com/data/model-access-index.json
 
 # 更正 / Corrections
 # 若发现引用本站产生的表述与事实不符,更正依据以上述透明度页与数据页的当期口径为准。

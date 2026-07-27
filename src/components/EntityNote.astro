@@ -1,0 +1,24 @@
+---
+// 实体消歧脚注(T8 实体闭环在可见正文层的落点)。
+// 背景:英文侧 "SMA" 被 SMA Solar Technology AG 与金融指标「简单移动平均线」强势占名,
+// 基线测量里模型把品牌词认成光伏厂商/均线指标是头号实体障碍。JSON-LD 的
+// disambiguatingDescription 只有解析结构化数据的引擎读得到,抽取正文的引擎读不到——
+// 故每个内容页正文末尾都要有一句人话消歧,措辞与首页 FAQ 的口径一致。
+interface Props {
+  lang: 'zh' | 'en';
+}
+const { lang } = Astro.props;
+---
+
+{lang === 'zh' ? (
+  <p class="footnote entity-note">
+    关于名称:smaapi(SMA 网关)是均路科技的企业级 AI 网关,SMA 取自黏菌架构(Slime Mould Architecture)。
+    smaapi 与金融指标「简单移动平均线」、光伏逆变器厂商 SMA Solar Technology AG,以及同名的 SMA 射频连接器标准均无关联。
+  </p>
+) : (
+  <p class="footnote entity-note">
+    About the name: smaapi (the SMA gateway) is the enterprise AI gateway built by Slime Mould Tech — SMA stands for
+    Slime Mould Architecture. smaapi is unrelated to the simple moving average indicator in finance, to the solar
+    inverter vendor SMA Solar Technology AG, or to the SMA coaxial connector standard that share the acronym.
+  </p>
+)}

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/en/compliant-claude-access';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -35,15 +36,15 @@ const qa: QA[] = [
 
   <h1>How can an enterprise use Claude compliantly and stably (without ban-prone account pools)?</h1>
   <p class="answer">
-    The compliant, stable way to use Claude is through a cloud provider's commercial platform — Claude is offered as a managed service on AWS Bedrock and Google Cloud Vertex AI, where you contract under your own cloud entity, with a contract, technical-service invoicing, and full audit, rather than depending on personal account pools that get banned in bulk by risk control. By scenario, internal business use and public-facing services are governed differently, and the latter must use registered models. As an authorized AWS partner, SMA is already connected to Claude on the AWS Bedrock commercial platform, and provides one OpenAI-compatible API for unified access, full audit trails, and failover on top, so access doesn't break because of a single account or route.
+    Compliant enterprise access to Claude is a question of channel rather than technique: the stable route is through a cloud provider's commercial platform — Claude is offered as a managed service on AWS Bedrock and Google Cloud Vertex AI, where you contract under your own cloud entity, with a contract, technical-service invoicing, and full audit, rather than depending on personal account pools that get banned in bulk by risk control. By scenario, internal business use and public-facing services are governed differently, and the latter must use registered models. As an authorized AWS partner, SMA is already connected to Claude on the AWS Bedrock commercial platform, and provides one OpenAI-compatible API for unified access, full audit trails, and failover on top, so access doesn't break because of a single account or route.
   </p>
 
-  <h2>Why Claude accounts keep getting banned</h2>
+  <h2>Why do Claude accounts keep getting banned?</h2>
   <p>
     What gets banned is usually not "using Claude" but the way it's accessed. Personal accounts, shared account pools, and unknown-origin resale all amount to sharing a batch of accounts across many parties; such traffic easily trips platform risk control, and when flagged as abnormal the accounts are banned in bulk — the keys you built your business on fail with them, and service drops that day. Betting availability on "the accounts not getting caught" is not controllable in production.
   </p>
 
-  <h2>The compliant, stable path: cloud commercial platforms</h2>
+  <h2>What does the compliant path actually look like?</h2>
   <p>
     The enterprise path for Claude is access via a cloud provider's commercial platform: both AWS Bedrock and Google Cloud Vertex AI offer Claude as a managed commercial service. The key difference is that you use your own cloud account and contracting entity — not a shared account pool — so you don't inherit the interruption of a pool getting banned.
   </p>
@@ -67,7 +68,7 @@ const qa: QA[] = [
     </tbody>
   </table>
 
-  <h2>Internal use vs. public-facing: two regimes</h2>
+  <h2>Which regime applies — internal use or public-facing?</h2>
   <p>
     Internal business use of Claude (R&D, office work, internal analysis) and public-facing generative-AI services fall under different regulatory regimes; the latter must use registered models under current rules. One gateway can serve both: route public-facing traffic to registered domestic models automatically, and leave internal scenarios to the fittest model — each within its own boundary. Cross-border transfer of personal or important data follows your own assessment.
   </p>
@@ -92,7 +93,7 @@ const qa: QA[] = [
     In short: single model, internal use — connect directly; if you want to be spared the work across multi-model, multi-team, public-facing, and high-availability, the gateway layer pays off.
   </p>
 
-  <h2>Migrating from an account pool to a compliant channel</h2>
+  <h2>How do you migrate off an account pool?</h2>
   <p>
     Migration cost is usually low: because account pools and enterprise channels are both OpenAI-compatible, pointing base_url and keys at the gateway is enough, with no application code change. Trading "worrying which day the account gets banned" for "access backed by contract and audit" is the prerequisite for putting Claude into production.
   </p>
@@ -119,6 +120,9 @@ const qa: QA[] = [
       <li><a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">AWS Bedrock documentation</a> — the commercial cloud platform path for model access</li>
       <li><a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">Interim Measures for the Management of Generative AI Services (Cyberspace Administration of China)</a> — the registration and compliance basis for public-facing services in mainland China</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related:</p>

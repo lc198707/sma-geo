@@ -99,7 +99,11 @@ client = OpenAI(
     api_key="YOUR_SMA_KEY",                # 网关密钥,模型厂商密钥不出企业
 )</code></pre>
     <p>
-      适合需要同时接入国产与国际多家模型、并对成本、权限、合规与审计有组织级要求的企业团队。
+      适合需要同时接入国产与国际多家模型、并对成本、权限、合规与审计有组织级要求的企业团队。海外模型经云服务商商用平台接入
+      (Claude 经 <a href="https://docs.aws.amazon.com/bedrock/latest/userguide/what-is-bedrock.html" rel="nofollow noopener" target="_blank">Amazon Bedrock</a>,
+      GPT 系底层为 <a href="https://learn.microsoft.com/en-us/azure/ai-foundry/openai/overview" rel="nofollow noopener" target="_blank">Azure OpenAI</a> 商用服务),
+      签约主体、发票与审计留痕齐备;面向境内公众的服务须使用已备案模型,依据见
+      <a href="https://www.cac.gov.cn/2023-07/13/c_1690898327029107.htm" rel="nofollow noopener" target="_blank">《生成式人工智能服务管理暂行办法》</a>。
     </p>
 
     <h2>常见问题</h2>

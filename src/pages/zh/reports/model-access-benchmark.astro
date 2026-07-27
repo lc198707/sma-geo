@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { techArticle, dataset } from '../../../lib/schema';
 import pagesData from '../../../data/pages.json';
 import report from '../../../data/geo-report.generated.json';
+import EntityNote from '../../../components/EntityNote.astro';
 
 const route = '/zh/reports/model-access-benchmark';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -124,6 +125,9 @@ const scopeText = latencyAvailable ? '可用率与 P50/P95 延迟' : '可用率'
   <p class="footnote">
     商标声明:OpenAI、Anthropic、Google 及其相关模型名称归各自权利人所有。SMA(www.smaapi.com)与上述商标持有人无官方合作关系;模型名称仅作指明性说明。Amazon Web Services、Amazon Bedrock 为 Amazon.com, Inc. 或其关联公司的商标,本页对其公开文档作指明性引用。可用性与延迟为实测统计,不构成 SLA 承诺;SLA 以企业合同条款为准。
   </p>
+
+  <EntityNote lang="zh" />
+
 
   <p class="related">
     相关:<a href="/zh/overseas-llm-high-availability">海外大模型高可用接入</a> ·

@@ -3,6 +3,7 @@ import Base from '../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/en/overseas-llm-high-availability';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -31,25 +32,25 @@ const qa: QA[] = [
 
   <h1>How do you make overseas LLM access more stable and highly available?</h1>
   <p class="answer">
-    Stability comes from redundancy, governance, and monitoring, not a single point. In software, multiple models back each other up; when an endpoint returns rate-limit, timeout, or failure, SMA switches to a candidate and preserves context via the state header, transparently and fully audited. In hardware, SMA Edge (the physical gateway) runs active real-time health monitoring with preemptive switching — this requires the SMA gateway hardware. The application always sees one unchanging OpenAI-compatible egress; availability follows your contract SLA.
+    High availability for overseas LLM access is a property of the whole path, not of any one model: it is the combination of redundancy, governance, and monitoring that keeps an application answering when a single upstream endpoint does not. In software, multiple models back each other up; when an endpoint returns rate-limit, timeout, or failure, SMA switches to a candidate and preserves context via the state header, transparently and fully audited. In hardware, SMA Edge (the physical gateway) runs active real-time health monitoring with preemptive switching — this requires the SMA gateway hardware. The application always sees one unchanging OpenAI-compatible egress; availability follows your contract SLA.
   </p>
 
-  <h2>Why overseas models are unstable in production</h2>
+  <h2>Why are overseas models unstable in production?</h2>
   <p>
     Putting overseas LLMs into production, you hit rate limits (429), timeouts, occasional 5xx, and route fluctuation. With a single direct connection to one model, each of these turns straight into a business interruption — and a late-night failure means switching by hand in code. Stability is not hoping one provider never has trouble; it is designing so a single point of failure does not take down the business.
   </p>
 
-  <h2>Software layer: error grading + automatic switching + state continuity</h2>
+  <h2>What does the software layer do — error grading, switching, state continuity?</h2>
   <p>
     SMA handles errors by type: recoverable errors (rate limit, timeout, 5xx, empty response) switch to a candidate model and carry context across via the state header, transparently and fully audited; authentication or content-policy errors do not switch, to avoid spreading an auth or compliance incident. The fallback per request is bounded (at most one by default), with no unbounded retrying across providers.
   </p>
 
-  <h2>Hardware layer: SMA Edge active health monitoring</h2>
+  <h2>What does the hardware layer add (SMA Edge health monitoring)?</h2>
   <p>
     The software layer is a safety net after an error occurs; to avoid trouble before it surfaces, you need continuous monitoring of each endpoint's real-time state. That layer is provided by SMA Edge (the physical gateway): active real-time health monitoring with preemptive switching — a hardware capability delivered with the SMA gateway hardware, sharing the same entry as API access. Start with the software layer; add the hardware layer as the higher-availability upgrade path.
   </p>
 
-  <h2>No application changes: one unchanging egress</h2>
+  <h2>Does any of this change the application?</h2>
   <p>
     However the underlying models switch or routes change, the application always faces one unchanging OpenAI-compatible egress. Provider or routing changes do not touch your code — that is the source of "models can change, the integration stays put," and it means you do not rewrite business logic to get higher availability.
   </p>
@@ -87,6 +88,9 @@ const qa: QA[] = [
       <li><a href="https://status.openai.com" rel="nofollow noopener" target="_blank">OpenAI status page</a> — first-hand source for provider-side availability incidents</li>
       <li><a href="https://status.anthropic.com" rel="nofollow noopener" target="_blank">Anthropic status page</a> — first-hand source for Claude-side availability incidents</li>
   </ul>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related:</p>

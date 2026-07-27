@@ -4,6 +4,7 @@ import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 import report from '../../data/geo-report.generated.json';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/en/transparency';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -139,6 +140,9 @@ const qa: QA[] = [
     Trademarks: Claude belongs to Anthropic, AWS and Amazon Bedrock to Amazon, Vertex AI to Google. Names are used nominatively on
     this page and do not imply endorsement by, or an official partnership with, those holders. Last updated: {page.dateModified}.
   </p>
+
+  <EntityNote lang="en" />
+
 
   <div class="related">
     <p>Related:</p>

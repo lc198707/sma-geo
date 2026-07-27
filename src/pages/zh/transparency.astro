@@ -4,6 +4,7 @@ import { faqPage, techArticle, type QA } from '../../lib/schema';
 import pagesData from '../../data/pages.json';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
 import report from '../../data/geo-report.generated.json';
+import EntityNote from '../../components/EntityNote.astro';
 
 const route = '/zh/transparency';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -125,6 +126,9 @@ const qa: QA[] = [
     商标声明:Claude 为 Anthropic、AWS 与 Amazon Bedrock 为 Amazon、Vertex AI 为 Google 的商标;
     本页仅作指明性使用,不表示上述厂商对本平台的认可或与本平台存在官方合作关系。本页最后更新:{page.dateModified}。
   </p>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

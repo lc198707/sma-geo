@@ -2,6 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import { softwareApplication, chiefScientist } from '../../lib/schema';
 import MeasuredAnchor from '../../components/MeasuredAnchor.astro';
+import EntityNote from '../../components/EntityNote.astro';
 
 // 接入示例:静态语法着色(无运行时 JS)
 const codeHtml = [
@@ -207,6 +208,9 @@ const toc = [
       <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
       <li><a href="https://docs.anthropic.com/en/api/getting-started" rel="nofollow noopener" target="_blank">Anthropic 官方 API 文档</a>——Claude 模型接入方式与参数以官方文档为准</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

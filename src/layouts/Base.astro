@@ -19,6 +19,8 @@ const alt = pagesData.pages.find((p) => p.route === page.alternate);
 const zh = page.lang === 'zh';
 const canonical = site + route;
 const xDefault = zh ? (alt ? site + alt.route : canonical) : canonical;
+// .md 镜像地址:与 scripts/generate-md-mirror.mjs 的落点规则同源(/ → /index.md,/zh/sma → /zh/sma.md)
+const mdMirror = site + (route.replace(/\/$/, '') === '' ? '/index.md' : `${route.replace(/\/$/, '')}.md`);
 // P2 面包屑:非首页生成 Home > 当前页(短标签取自注册表 llms.label)
 const isHome = route === '/' || route === '/en/';
 const crumb = isHome
@@ -58,6 +60,9 @@ const nav = zh
     <link rel="alternate" hreflang={zh ? 'zh-CN' : 'en'} href={canonical} />
     {alt && <link rel="alternate" hreflang={zh ? 'en' : 'zh-CN'} href={site + alt.route} />}
     <link rel="alternate" hreflang="x-default" href={xDefault} />
+    {/* .md 镜像的可发现性:镜像文件本身早已生成,但没有任何一处声明它存在——
+        爬虫只能靠「同 URL 加 .md」这一事实约定去猜。此处显式声明,与 sitemap/llms.txt 一样是入口。 */}
+    {!page.draft && <link rel="alternate" type="text/markdown" href={mdMirror} />}
     <meta property="og:title" content={page.title} />
     <meta property="og:description" content={page.description} />
     <meta property="og:type" content="website" />

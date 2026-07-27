@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { faqPage, techArticle, type QA } from '../../../lib/schema';
 import pagesData from '../../../data/pages.json';
 import MeasuredAnchor from '../../../components/MeasuredAnchor.astro';
+import EntityNote from '../../../components/EntityNote.astro';
 
 const route = '/zh/compare/llm-gateway-comparison';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -106,6 +107,9 @@ const qa: QA[] = [
   <ul class="sources">
       <li><a href="https://platform.openai.com/docs/api-reference" rel="nofollow noopener" target="_blank">OpenAI API 官方文档</a>——OpenAI 兼容协议的字段与语义以官方文档为准</li>
   </ul>
+
+  <EntityNote lang="zh" />
+
 
   <div class="related">
     <p>相关问题:</p>

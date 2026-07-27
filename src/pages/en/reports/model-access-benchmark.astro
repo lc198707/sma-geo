@@ -3,6 +3,7 @@ import Base from '../../../layouts/Base.astro';
 import { techArticle, dataset } from '../../../lib/schema';
 import pagesData from '../../../data/pages.json';
 import report from '../../../data/geo-report.generated.json';
+import EntityNote from '../../../components/EntityNote.astro';
 
 const route = '/en/reports/model-access-benchmark';
 const page = pagesData.pages.find((p) => p.route === route)!;
@@ -124,6 +125,9 @@ const fmt = (n: number | null) => (n === null || n === undefined ? '—' : (Numb
   <p class="footnote">
     Trademarks: OpenAI, Anthropic, Google, and their model names belong to their respective holders. SMA (www.smaapi.com) has no official partnership with these trademark holders; model names are used nominatively. Amazon Web Services and Amazon Bedrock are trademarks of Amazon.com, Inc. or its affiliates; this page cites their public documentation nominatively. Availability and latency are measured statistics and do not constitute an SLA; SLA terms are per enterprise contract.
   </p>
+
+  <EntityNote lang="en" />
+
 
   <p class="related">
     Related: <a href="/en/overseas-llm-high-availability">High-availability access to overseas LLMs</a> ·
