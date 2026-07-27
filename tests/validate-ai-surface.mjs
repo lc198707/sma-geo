@@ -47,6 +47,15 @@ for (const page of pages) {
   }
 }
 
+// 目录型路由(/en/)的协商副本:服务端按 {path}/index.md 查找,缺了协商就落空
+for (const page of pages) {
+  const clean = page.route.replace(/\/$/, '');
+  if (!page.route.endsWith('/') || clean === '') continue;
+  const copy = `dist${clean}/index.md`;
+  if (!has(copy)) errors.push(`目录型路由缺协商副本: ${copy}(${page.route})`);
+  else if (read(copy) !== read(mdPathOf(page.route))) errors.push(`${copy}: 内容与主镜像不一致`);
+}
+
 // draft 页不得生成镜像(未发布的数字不该以任何形态出去)
 for (const page of allPages.filter((p) => p.draft)) {
   if (has(mdPathOf(page.route))) errors.push(`draft 页不应生成 .md 镜像: ${page.route}`);

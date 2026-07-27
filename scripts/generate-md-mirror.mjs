@@ -88,5 +88,14 @@ ${body}
   mkdirSync(dirname(out), { recursive: true });
   writeFileSync(out, md);
   n++;
+  // 目录型路由(/en/)再落一份 <dir>/index.md:服务端内容协商按 {path}/index.md 找镜像,
+  // 而这类路由的主镜像落点是 en.md,协商会落空。根路由 / 的 index.md 已天然满足。
+  const clean = p.route.replace(/\/$/, '');
+  if (p.route.endsWith('/') && clean !== '') {
+    const dirCopy = resolve(root, 'dist', `${clean.slice(1)}/index.md`);
+    mkdirSync(dirname(dirCopy), { recursive: true });
+    writeFileSync(dirCopy, md);
+    n++;
+  }
 }
 console.log(`md mirror generated: ${n} files`);
