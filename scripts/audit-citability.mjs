@@ -100,7 +100,17 @@ function scoreCite(p) {
 }
 
 // ② 统计数据:可被引擎摘出的具体数字(带单位/百分比),排除年份与版本号
-const STAT_RE = /(?<![\w.])\d{1,3}(?:[,，]\d{3})*(?:\.\d+)?\s*(?:%|％|ms|毫秒|秒|分钟|小时|倍|万|亿|千|个|家|条|次|项|类|人|元|美元|TPS|QPS|req\/s|tokens?)/gi;
+// 单位表分中英两组:此前只有中文量词,导致同一批实测数字在中文页命中、英文页判零——
+// 「8 个模型 / 384 次真实请求」得分,而同源同事实的「8 connected models / 384 real requests」不得分,
+// 失分来自语言而非内容。英文侧单位需词边界收尾(中文无需),避免 "8 modelsomething" 类误命中。
+const UNIT_ZH = '%|％|毫秒|秒|分钟|小时|天|倍|万|亿|千|个|家|条|次|项|类|人|元|美元';
+const UNIT_EN = 'ms|milliseconds?|seconds?|secs?|minutes?|mins?|hours?|days?|weeks?|months?'
+  + '|models?|providers?|engines?|requests?|calls?|queries|query|samples?|rounds?|pages?|sources?|domains?'
+  + '|keys?|teams?|projects?|regions?|items?|users?|fields?|steps?|checks?|rules?|tokens?'
+  + '|times|percent|percentage points?|TPS|QPS|req\\/s|USD|RMB|CNY|x|×';
+// 英文常见连字符定语(90-second timeout / 8-model matrix)也应计入,故间隔允许 "-"
+const STAT_RE = new RegExp(
+  String.raw`(?<![\w.])\d{1,3}(?:[,，]\d{3})*(?:\.\d+)?[\s-]*(?:(?:${UNIT_ZH})|(?:${UNIT_EN})\b)`, 'gi');
 const YEAR_RE = /(19|20)\d{2}\s*(?:年|-)/g;
 function scoreStats(p) {
   const raw = p.text.replace(YEAR_RE, ' ');
@@ -116,7 +126,9 @@ const ATTRIB_RE = /据|来源|引自|参见|表示|指出|according to|source:|c
 function scoreQuote(p) {
   const inline = [...p.text.matchAll(/[“"]([^”"]{12,})[”"]/g)].map((m) => m[1]);
   const all = [...p.blockquotes, ...inline];
-  const attributed = all.filter((q) => ATTRIB_RE.test(q) || p.text.includes('来源'));
+  // 出处判定同样按语言对称:中文看「来源」,英文看 source/sources(此前只有中文兜底)
+  const hasSourceNote = /来源/.test(p.text) || /\bsources?\b/i.test(p.text);
+  const attributed = all.filter((q) => ATTRIB_RE.test(q) || hasSourceNote);
   const ratio = Math.min(1, (Math.min(all.length, 2) / 2) * 0.6 + (Math.min(attributed.length, 2) / 2) * 0.4);
   return { ratio, detail: all.length ? `${all.length} 处引述(${attributed.length} 处带出处)` : '无引述' };
 }
